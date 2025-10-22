@@ -1,10 +1,14 @@
+// src/app/auth/registro/registro.ts
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MaterialModule } from '../../material/material-module';
 
 @Component({
   selector: 'app-registro',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, MaterialModule],
   templateUrl: './registro.html',
-  styleUrl: './registro.css'
+  styleUrls: ['./registro.css']
 })
 export class Registro {
 

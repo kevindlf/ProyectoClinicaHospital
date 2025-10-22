@@ -1,19 +1,16 @@
-// src/app/app-routes.ts
-
+// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-
-  // Carga Diferida (Lazy Loading) para Autenticación
   {
-    path: 'auth', // Todo lo que empiece con /auth
+    path: 'auth',
+    // Asegúrate que el nombre del archivo sea exacto (sin .ts)
     loadChildren: () => import('./auth/auth-module').then(m => m.AuthModule)
   },
-
-  // Ruta por defecto de la aplicación
+  // ... resto de rutas
   {
     path: '',
-    redirectTo: 'auth', // Redirige a /auth (que a su vez redirige a /login)
+    redirectTo: 'auth',
     pathMatch: 'full'
   }
 ];

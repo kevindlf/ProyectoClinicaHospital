@@ -1,5 +1,5 @@
 <div class="login-container">
-  
+
   <mat-card>
     <mat-card-header>
       <mat-card-title>Iniciar Sesión</mat-card-title>
@@ -7,28 +7,48 @@
     </mat-card-header>
 
     <mat-card-content>
-      <form class="login-form">
-        
+      <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+
         <mat-form-field appearance="outline">
           <mat-label>Email</mat-label>
-          <input matInput placeholder="ej: nombre@correo.com">
+          <input matInput placeholder="ej: nombre@correo.com" formControlName="email">
           <mat-icon matSuffix>email</mat-icon>
+          @if (loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)) {
+            <mat-error>
+              @if (loginForm.get('email')?.errors?.['required']) {
+                El email es requerido.
+              }
+              @if (loginForm.get('email')?.errors?.['email']) {
+                Por favor, ingresa un email válido.
+              }
+            </mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Contraseña</mat-label>
-          <input matInput type="password" placeholder="Tu contraseña">
+          <input matInput type="password" placeholder="Tu contraseña" formControlName="password">
           <mat-icon matSuffix>lock</mat-icon>
+           @if (loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)) {
+            <mat-error>
+              @if (loginForm.get('password')?.errors?.['required']) {
+                La contraseña es requerida.
+              }
+              @if (loginForm.get('password')?.errors?.['minlength']) {
+                La contraseña debe tener al menos 6 caracteres.
+              }
+            </mat-error>
+          }
         </mat-form-field>
+
+         <button mat-raised-button color="primary" class="login-button" type="submit" [disabled]="loginForm.invalid">
+          Ingresar
+        </button>
 
       </form>
     </mat-card-content>
 
     <mat-card-actions>
-      <button mat-raised-button color="primary" class="login-button">
-        Ingresar
-      </button>
-      
       <a routerLink="/auth/registro" class="link-registro">
         ¿No tienes cuenta? Regístrate
       </a>
