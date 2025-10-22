@@ -1,0 +1,39 @@
+<div class="login-container">
+  
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Iniciar Sesión</mat-card-title>
+      <mat-card-subtitle>Clínica Online</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form class="login-form">
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="ej: nombre@correo.com">
+          <mat-icon matSuffix>email</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Contraseña</mat-label>
+          <input matInput type="password" placeholder="Tu contraseña">
+          <mat-icon matSuffix>lock</mat-icon>
+        </mat-form-field>
+
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" class="login-button">
+        Ingresar
+      </button>
+      
+      <a routerLink="/auth/registro" class="link-registro">
+        ¿No tienes cuenta? Regístrate
+      </a>
+    </mat-card-actions>
+
+  </mat-card>
+
+</div>

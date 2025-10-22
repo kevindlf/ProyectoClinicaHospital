@@ -1,0 +1,33 @@
+/* src/app/auth/login/login.component.css (o .scss) */
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh; /* Ocupa casi toda la altura */
+}
+
+mat-card {
+  width: 100%;
+  max-width: 400px; /* Ancho máximo del formulario */
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column; /* Un campo debajo del otro */
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.login-button {
+  width: 100%; /* El botón ocupa todo el ancho */
+}
+
+.link-registro {
+  display: block;
+  text-align: center;
+  margin-top: 16px;
+  text-decoration: none;
+}
