@@ -1,0 +1,27 @@
+<!-- src/app/dashboard/dashboard.html -->
+<div style="padding: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h2>Dashboard Principal</h2>
+    <button mat-raised-button color="warn" (click)="logout()">Cerrar Sesión</button>
+  </div>
+
+  <hr style="margin: 20px 0;">
+
+  <h3>Lista de Pacientes</h3>
+
+  @if (cargando) {
+    <p>Cargando pacientes...</p>
+  } @else if (errorMensaje) {
+    <p style="color: red;">{{ errorMensaje }}</p>
+  } @else if (pacientes.length > 0) {
+    <ul>
+      @for (paciente of pacientes; track paciente.id) {
+        <li>{{ paciente.nombre }} {{ paciente.apellido }} (ID: {{ paciente.id }})</li>
+        <!-- Puedes añadir más detalles o enlaces aquí -->
+      }
+    </ul>
+  } @else {
+    <p>No se encontraron pacientes registrados.</p>
+  }
+
+</div>

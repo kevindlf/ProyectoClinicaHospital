@@ -1,5 +1,6 @@
 // src/app/app.routes.ts
 import { Routes } from '@angular/router';
+import { Dashboard } from './dashboard/dashboard';
 
 export const routes: Routes = [
   {
@@ -7,7 +8,11 @@ export const routes: Routes = [
     // Asegúrate que el nombre del archivo sea exacto (sin .ts)
     loadChildren: () => import('./auth/auth-module').then(m => m.AuthModule)
   },
-  // ... resto de rutas
+  {
+    path: 'dashboard',
+    component: Dashboard
+    // Más adelante añadiremos un 'Guard' aquí para protegerla
+  },
   {
     path: '',
     redirectTo: 'auth',

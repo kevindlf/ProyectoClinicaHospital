@@ -46,6 +46,11 @@
         </button>
 
       </form>
+
+      @if (loginError) {
+        <mat-error style="text-align: center; margin-top: 10px;">{{ loginError }}</mat-error>
+      }
+
     </mat-card-content>
 
     <mat-card-actions>

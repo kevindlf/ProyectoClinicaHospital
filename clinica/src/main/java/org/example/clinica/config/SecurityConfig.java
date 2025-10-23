@@ -5,14 +5,19 @@ import org.example.clinica.model.postgres.Role;
 import org.example.clinica.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpMethod; // Asegúrate que HttpMethod está importado
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import static org.springframework.security.config.Customizer.withDefaults;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -25,44 +30,47 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Deshabilita CSRF porque JWT lo hace innecesario y se usa REST
+                .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-
-                // Definición de las reglas de autorización por URL y Rol
                 .authorizeHttpRequests(auth -> auth
-                        // 1. Rutas de Autenticación (Permitidas para TODOS)
+                        // --- CAMBIO IMPORTANTE AQUÍ ---
+                        // 1. Permite peticiones OPTIONS a /api/auth/** (para preflight de CORS)
+                        .requestMatchers(HttpMethod.OPTIONS, "/api/auth/**").permitAll()
+                        // 2. Luego, permite el resto de peticiones a /api/auth/**
                         .requestMatchers("/api/auth/**").permitAll()
+                        // --- FIN DEL CAMBIO ---
 
-                        // 2. Permisos de Pacientes
-                        // Médicos y Admins pueden crear (POST)
+                        // Permisos de Pacientes (sin cambios)
                         .requestMatchers(HttpMethod.POST, "/api/pacientes").hasAnyRole(Role.ADMIN.name(), Role.MEDICO.name())
-                        // Médicos y Admins pueden actualizar/eliminar (PUT/DELETE)
                         .requestMatchers(HttpMethod.PUT, "/api/pacientes/**").hasAnyRole(Role.ADMIN.name(), Role.MEDICO.name())
                         .requestMatchers(HttpMethod.DELETE, "/api/pacientes/**").hasAnyRole(Role.ADMIN.name(), Role.MEDICO.name())
-
-                        // Enfermeros, Médicos y Admins pueden consultar (GET)
                         .requestMatchers(HttpMethod.GET, "/api/pacientes/**").hasAnyRole(Role.ADMIN.name(), Role.MEDICO.name(), Role.ENFERMERO.name())
                         .requestMatchers(HttpMethod.GET, "/api/pacientes").hasAnyRole(Role.ADMIN.name(), Role.MEDICO.name(), Role.ENFERMERO.name())
 
-                        // 3. Permisos de Usuarios (Solo Admins)
+                        // Permisos de Usuarios (sin cambios)
                         .requestMatchers("/api/usuarios/**").hasRole(Role.ADMIN.name())
 
-                        // Cualquier otra petición requiere autenticación
+                        // Cualquier otra petición requiere autenticación (sin cambios)
                         .anyRequest().authenticated()
                 )
-
-                // Configuración de la sesión para ser SIN ESTADO (Stateless)
-                // Esencial para JWT, ya que no se almacena estado de sesión en el servidor
                 .sessionManagement(sess -> sess
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
-                // Establece el proveedor de autenticación
                 .authenticationProvider(authenticationProvider)
-
-                // Agrega el filtro JWT antes del filtro de usuario/contraseña de Spring
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // OPTIONS debe estar aquí
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuration);
+        return source;
     }
 }
