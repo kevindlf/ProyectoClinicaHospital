@@ -1,27 +1,32 @@
-<!-- src/app/dashboard/dashboard.html -->
-<div style="padding: 20px;">
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <h2>Dashboard Principal</h2>
-    <button mat-raised-button color="warn" (click)="logout()">Cerrar Sesión</button>
+<div class="dashboard-container" style="padding: 40px; display: flex; flex-direction: column; align-items: center;">
+
+  <div style="width: 100%; max-width: 800px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Bienvenido/a Médico/a</h2> // <<< Mensaje de Bienvenida
+    <button mat-flat-button color="warn" (click)="logout()">
+      <mat-icon>logout</mat-icon> Cerrar Sesión
+    </button>
   </div>
 
-  <hr style="margin: 20px 0;">
+  <mat-card style="width: 100%; max-width: 800px;">
+    <mat-card-header>
+      <mat-card-title>Acciones Principales</mat-card-title>
+      <mat-card-subtitle>Seleccione una opción para continuar</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; padding: 20px;">
 
-  <h3>Lista de Pacientes</h3>
+      <button mat-raised-button color="primary" (click)="irACrearPaciente()" style="min-width: 200px; padding: 15px;">
+        <mat-icon>person_add</mat-icon> Crear Paciente Nuevo
+      </button>
 
-  @if (cargando) {
-    <p>Cargando pacientes...</p>
-  } @else if (errorMensaje) {
-    <p style="color: red;">{{ errorMensaje }}</p>
-  } @else if (pacientes.length > 0) {
-    <ul>
-      @for (paciente of pacientes; track paciente.id) {
-        <li>{{ paciente.nombre }} {{ paciente.apellido }} (ID: {{ paciente.id }})</li>
-        <!-- Puedes añadir más detalles o enlaces aquí -->
-      }
-    </ul>
-  } @else {
-    <p>No se encontraron pacientes registrados.</p>
-  }
+      <button mat-raised-button color="accent" (click)="irAModificarPaciente()" style="min-width: 200px; padding: 15px;">
+        <mat-icon>edit</mat-icon> Modificar Paciente Existente
+      </button>
+
+      <button mat-raised-button (click)="irAObservarPaciente()" style="min-width: 200px; padding: 15px;">
+        <mat-icon>visibility</mat-icon> Observar Paciente
+      </button>
+
+      </mat-card-content>
+  </mat-card>
 
 </div>

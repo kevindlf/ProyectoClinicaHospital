@@ -1,57 +1,58 @@
 // src/app/dashboard/dashboard.ts
 import { Component, OnInit } from '@angular/core';
-import { PacienteService } from '../pacientes/paciente'; // Corrección de import
-import { AuthService } from '../auth/auth'; // Corrección de import
+// Quitamos PacienteService ya que no se usa aquí directamente
+import { AuthService } from '../auth/auth';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common'; // Para @if/@for
-import { MatButtonModule } from '@angular/material/button'; // Para el botón de logout
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card'; // Importamos MatCardModule
+import { MatIconModule } from '@angular/material/icon'; // Importamos MatIconModule
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatButtonModule],
+  // Añadimos MatCardModule y MatIconModule a los imports
+  imports: [CommonModule, MatButtonModule, MatCardModule, MatIconModule],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
 export class Dashboard implements OnInit {
 
-  pacientes: any[] = [];
-  errorMensaje: string | null = null;
-  cargando = true; // Variable para mostrar indicador de carga
+  // Quitamos las propiedades pacientes, errorMensaje, cargando
 
   constructor(
-    private pacienteService: PacienteService,
+    // Quitamos pacienteService
     private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    // this.cargarPacientes(); // <<< COMENTA ESTA LÍNEA TEMPORALMENTE
-    this.cargando = false; // <<< AÑADE ESTO para que no se quede "Cargando..."
-    console.log('Dashboard ngOnInit ejecutado (sin cargar pacientes).'); // Log para confirmar
+    // El ngOnInit ahora está vacío, podríamos poner lógica de bienvenida si quisiéramos
+    console.log('Dashboard del Médico cargado.');
   }
 
-  cargarPacientes(): void {
-    this.cargando = true;
-    this.errorMensaje = null;
-    this.pacienteService.getPacientes().subscribe({
-      next: (data) => {
-        console.log('Pacientes recibidos:', data);
-        this.pacientes = data;
-        this.cargando = false;
-      },
-      error: (error) => {
-        console.error('Error al obtener pacientes:', error);
-        if (error.status === 401 || error.status === 403) {
-          this.errorMensaje = 'No autorizado. Serás redirigido al login.';
-          setTimeout(() => this.logout(), 2000);
-        } else {
-          this.errorMensaje = 'Error al cargar los datos de pacientes desde el servidor.';
-        }
-        this.cargando = false;
-      }
-    });
+  // Quitamos el método cargarPacientes()
+
+  // --- NUEVOS MÉTODOS PARA NAVEGACIÓN ---
+  irACrearPaciente(): void {
+    this.router.navigate(['/pacientes/nuevo']);
   }
+
+  irAModificarPaciente(): void {
+    // Navegaremos a una futura ruta para listar/buscar pacientes
+    console.log('Navegando a Modificar Paciente (ruta pendiente)...');
+    // this.router.navigate(['/pacientes/lista']); // Ejemplo de ruta futura
+    alert('Funcionalidad "Modificar Paciente" pendiente.'); // Placeholder
+  }
+
+  irAObservarPaciente(): void {
+    // Navegaremos a la misma futura ruta para listar/buscar pacientes
+    console.log('Navegando a Observar Paciente (ruta pendiente)...');
+    // this.router.navigate(['/pacientes/lista']); // Ejemplo de ruta futura
+    alert('Funcionalidad "Observar Paciente" pendiente.'); // Placeholder
+  }
+  // --- FIN NUEVOS MÉTODOS ---
+
 
   logout(): void {
     this.authService.logout();

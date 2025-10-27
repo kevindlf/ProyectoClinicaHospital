@@ -1,0 +1,83 @@
+<div style="padding: 20px; max-width: 800px; margin: auto;">
+  <h2>{{ pacienteId ? 'Editar Datos Personales' : 'Crear Nuevo Paciente - Datos Personales' }}</h2>
+
+  <mat-card>
+    <mat-card-header>
+       <mat-card-title>Datos Personales</mat-card-title>
+       @if(!pacienteId) {
+         <mat-card-subtitle>Complete la información inicial requerida</mat-card-subtitle>
+       }
+    </mat-card-header>
+
+    <mat-card-content>
+       <form [formGroup]="datosPersonalesForm" (ngSubmit)="onSubmit()">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+            <mat-form-field appearance="outline">
+               <mat-label>Nombre</mat-label>
+               <input matInput formControlName="nombre" required>
+               @if (datosPersonalesForm.get('nombre')?.invalid && datosPersonalesForm.get('nombre')?.touched) {
+                 <mat-error>Nombre requerido</mat-error>
+               }
+           </mat-form-field>
+           <mat-form-field appearance="outline">
+               <mat-label>Apellido</mat-label>
+               <input matInput formControlName="apellido" required>
+               @if (datosPersonalesForm.get('apellido')?.invalid && datosPersonalesForm.get('apellido')?.touched) {
+                 <mat-error>Apellido requerido</mat-error>
+               }
+           </mat-form-field>
+           <mat-form-field appearance="outline">
+               <mat-label>Fecha de Nacimiento</mat-label>
+               <input matInput [matDatepicker]="pickerNacimiento" formControlName="fechaNacimiento" required readonly>
+               <mat-datepicker-toggle matSuffix [for]="pickerNacimiento"></mat-datepicker-toggle>
+               <mat-datepicker #pickerNacimiento></mat-datepicker>
+               @if (datosPersonalesForm.get('fechaNacimiento')?.invalid && datosPersonalesForm.get('fechaNacimiento')?.touched) {
+                 <mat-error>Fecha requerida</mat-error>
+               }
+           </mat-form-field>
+           <mat-form-field appearance="outline">
+               <mat-label>Documento</mat-label>
+               <input matInput formControlName="documento" required>
+               @if (datosPersonalesForm.get('documento')?.invalid && datosPersonalesForm.get('documento')?.touched) {
+                 <mat-error>Documento requerido</mat-error>
+               }
+           </mat-form-field>
+           <div>
+             <label id="genero-radio-group-label" style="display: block; margin-bottom: 5px; color: rgba(0,0,0,.6);">Género</label>
+             <mat-radio-group aria-labelledby="genero-radio-group-label" formControlName="genero" required>
+               <mat-radio-button value="Masculino" style="margin-right: 10px;">Masculino</mat-radio-button>
+               <mat-radio-button value="Femenino" style="margin-right: 10px;">Femenino</mat-radio-button>
+               <mat-radio-button value="Otro">Otro</mat-radio-button>
+             </mat-radio-group>
+             @if (datosPersonalesForm.get('genero')?.invalid && datosPersonalesForm.get('genero')?.touched) {
+               <mat-error style="font-size: 75%; color: #f44336;">Género requerido</mat-error>
+             }
+           </div>
+           <mat-form-field appearance="outline"> <mat-label>Estado Civil</mat-label> <input matInput formControlName="estadoCivil"> </mat-form-field>
+           <mat-form-field appearance="outline"> <mat-label>Fecha Primera Diálisis</mat-label> <input matInput [matDatepicker]="pickerDialisis" formControlName="fechaPrimeraDialisis" readonly> <mat-datepicker-toggle matSuffix [for]="pickerDialisis"></mat-datepicker-toggle> <mat-datepicker #pickerDialisis></mat-datepicker> </mat-form-field>
+           <mat-form-field appearance="outline"> <mat-label>Teléfonos</mat-label> <input matInput formControlName="telefonos" placeholder="Separados por coma"> </mat-form-field>
+           <mat-form-field appearance="outline"> <mat-label>Emails</mat-label> <input matInput type="email" formControlName="emails" placeholder="Separados por coma"> @if(datosPersonalesForm.get('emails')?.invalid && datosPersonalesForm.get('emails')?.touched){ <mat-error>Email inválido</mat-error> } </mat-form-field>
+           <mat-form-field appearance="outline"> <mat-label>Domicilio</mat-label> <input matInput formControlName="domicilio"> </mat-form-field>
+           <mat-form-field appearance="outline"> <mat-label>Obra Social</mat-label> <input matInput formControlName="obraSocial"> </mat-form-field>
+           <mat-form-field appearance="outline"> <mat-label>Institución</mat-label> <input matInput formControlName="institucion"> </mat-form-field>
+        </div>
+
+        @if (mensajeExito) {
+          <p style="color: green; text-align: center; margin-top: 15px; margin-bottom: 0;">{{ mensajeExito }}</p>
+        }
+        @if (mensajeError) {
+          <p style="color: red; text-align: center; margin-top: 15px; margin-bottom: 0;">{{ mensajeError }}</p>
+        }
+
+        <mat-card-actions align="end" style="margin-top: 20px;">
+          <button mat-button type="button" [routerLink]="['/dashboard']">Cancelar</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="datosPersonalesForm.invalid || isLoading">
+            {{ isLoading ? 'Guardando...' : (pacienteId ? 'Actualizar Datos Personales' : 'Guardar Paciente') }}
+          </button>
+        </mat-card-actions>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+</div>

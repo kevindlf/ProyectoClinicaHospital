@@ -5,5 +5,5 @@ public enum Role {
     ADMIN,          // Superusuario: Gestión total del sistema y usuarios.
     MEDICO,         // Crear, Modificar, Eliminar y Consultar pacientes y formularios.
     ENFERMERO,      // Solo Consultar (GET) pacientes.
-    PACIENTE        // Solo Consultar su propio perfil.
+    TECNICO        // Solo Consultar su propio perfil.
 }

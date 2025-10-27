@@ -1,6 +1,6 @@
 // src/app/auth/login/login.ts
 
-import { Component, NgZone, OnInit } from '@angular/core'; // 1. Importa NgZone
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../auth';
@@ -10,7 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common'; // Importa CommonModule para @if
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -36,17 +36,22 @@ export class Login implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private zone: NgZone // 2. Inyecta NgZone
+    private zone: NgZone
   ) { }
 
   ngOnInit(): void {
+    // --- INICIO CAMBIO ---
+    // Comenta o elimina este bloque para evitar la redirección automática
+    /*
     if (this.authService.estaLogueado()) {
-        this.zone.run(() => {
-             this.router.navigate(['/dashboard']);
-             console.log('Usuario ya logueado, redirigiendo desde ngOnInit...');
-        });
+        const rol = this.authService.obtenerRolUsuario();
+        console.log(`Usuario ya logueado con rol ${rol}, redirigiendo desde ngOnInit...`);
+        this.redirigirSegunRol(rol);
     }
+    */
+    // --- FIN CAMBIO ---
 
+    // El formulario se sigue creando normalmente
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -54,6 +59,7 @@ export class Login implements OnInit {
   }
 
   onLogin(): void {
+    // ... (el resto de la función onLogin se mantiene igual) ...
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -61,47 +67,47 @@ export class Login implements OnInit {
 
     this.loginError = null;
     const credentials = this.loginForm.value;
-    console.log('Intentando login con:', credentials.email); // Log para debug
+    console.log('Intentando login con:', credentials.email);
 
     this.authService.login(credentials).subscribe({
-      next: (response: any) => { // Cambia a any para debug
-        console.log('Login exitoso, respuesta completa:', response);
-        console.log('Token recibido:', response.token);
-
-        // Verifica que el token se guardó
-        const savedToken = this.authService.obtenerToken();
-        console.log('Token guardado en localStorage:', savedToken);
-
-        console.log('>>> Intentando navegar a /dashboard...');
-
-        this.zone.run(() => {
-          this.router.navigate(['/dashboard'])
-            .then(navigated => {
-              if (navigated) {
-                console.log('>>> Navegación a /dashboard exitosa.');
-              } else {
-                console.error('>>> Navegación a /dashboard rechazada.');
-              }
-            })
-            .catch(err => {
-              console.error('>>> ERROR en navegación:', err);
-            });
-        });
+      next: (token) => {
+        console.log('Login exitoso, token guardado:', token);
+        const rol = this.authService.obtenerRolUsuario();
+        console.log(`Usuario logueado con rol: ${rol}`);
+        this.redirigirSegunRol(rol); // La redirección DESPUÉS del login sigue funcionando
       },
       error: (error) => {
-        console.error('Error completo en login:', error);
-        console.error('Status:', error.status);
-        console.error('StatusText:', error.statusText);
-        console.error('Error body:', error.error);
-
+        console.error('Error DETALLADO en login:', error);
         if (error.status === 401 || error.status === 403) {
-           this.loginError = 'Credenciales incorrectas o usuario no autorizado.';
-        } else if (error.status === 0) {
-           this.loginError = 'No se puede conectar al servidor. Verifica que esté corriendo.';
+           this.loginError = 'Credenciales incorrectas.';
         } else {
-           this.loginError = `Error del servidor (${error.status}): ${error.statusText}`;
+           this.loginError = error?.error?.message || error?.message || 'Error inesperado. Inténtalo más tarde.';
         }
       }
     });
+  }
+
+  // El método redirigirSegunRol se mantiene igual
+  private redirigirSegunRol(rol: string | null): void {
+     this.zone.run(() => {
+        console.log(`>>> Redirigiendo según rol: ${rol}`);
+        switch (rol) {
+          case 'ADMIN':
+            this.router.navigate(['/admin/usuarios']);
+            break;
+          case 'MEDICO':
+            this.router.navigate(['/dashboard']);
+            break;
+          case 'ENFERMERO':
+          case 'TECNICO':
+             console.warn(`Redirección para ${rol} aún no definida, yendo a dashboard por defecto.`);
+             this.router.navigate(['/dashboard']);
+             break;
+          default:
+            console.error(`Rol no reconocido o inválido: "${rol}". No se puede redirigir.`);
+            this.loginError = 'No se pudo determinar el rol del usuario. Contacte al administrador.';
+            break;
+        }
+     });
   }
 }
