@@ -1,4 +1,4 @@
-// src/app/material/material-module.ts
+// src/app/material/material.module.ts
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -10,12 +10,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-
-// --- NUEVAS IMPORTACIONES ---
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatDividerModule } from '@angular/material/divider';
+
+// --- NUEVAS IMPORTACIONES PARA SIDENAV ---
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
 // --- FIN NUEVAS IMPORTACIONES ---
 
 
@@ -32,11 +35,14 @@ import { MatRadioModule } from '@angular/material/radio';
     MatButtonModule,
     MatIconModule,
     MatSelectModule,
-    // --- NUEVOS EXPORTS ---
     MatStepperModule,
     MatDatepickerModule,
-    MatNativeDateModule, // Exporta MatNativeDateModule
-    MatRadioModule
+    MatNativeDateModule,
+    MatRadioModule,
+    MatDividerModule,
+    // --- NUEVOS EXPORTS PARA SIDENAV ---
+    MatSidenavModule,
+    MatListModule
     // --- FIN NUEVOS EXPORTS ---
   ]
 })

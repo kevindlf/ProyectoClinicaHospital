@@ -1,83 +1,147 @@
-<div style="padding: 20px; max-width: 800px; margin: auto;">
-  <h2>{{ pacienteId ? 'Editar Datos Personales' : 'Crear Nuevo Paciente - Datos Personales' }}</h2>
+@if(isLoading) {
+  <div style="text-align: center; padding: 20px;">Cargando/Guardando...</div>
+}
 
-  <mat-card>
-    <mat-card-header>
-       <mat-card-title>Datos Personales</mat-card-title>
-       @if(!pacienteId) {
-         <mat-card-subtitle>Complete la información inicial requerida</mat-card-subtitle>
-       }
-    </mat-card-header>
+<form [formGroup]="pacienteForm" (ngSubmit)="onSubmit()">
 
-    <mat-card-content>
-       <form [formGroup]="datosPersonalesForm" (ngSubmit)="onSubmit()">
+  @switch (seccionActiva) {
+
+    @case ('datos-personales') {
+      <div formGroupName="datosPersonales">
+        <h3>Datos Personales</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
-            <mat-form-field appearance="outline">
-               <mat-label>Nombre</mat-label>
-               <input matInput formControlName="nombre" required>
-               @if (datosPersonalesForm.get('nombre')?.invalid && datosPersonalesForm.get('nombre')?.touched) {
-                 <mat-error>Nombre requerido</mat-error>
-               }
-           </mat-form-field>
-           <mat-form-field appearance="outline">
-               <mat-label>Apellido</mat-label>
-               <input matInput formControlName="apellido" required>
-               @if (datosPersonalesForm.get('apellido')?.invalid && datosPersonalesForm.get('apellido')?.touched) {
-                 <mat-error>Apellido requerido</mat-error>
-               }
-           </mat-form-field>
-           <mat-form-field appearance="outline">
-               <mat-label>Fecha de Nacimiento</mat-label>
-               <input matInput [matDatepicker]="pickerNacimiento" formControlName="fechaNacimiento" required readonly>
-               <mat-datepicker-toggle matSuffix [for]="pickerNacimiento"></mat-datepicker-toggle>
-               <mat-datepicker #pickerNacimiento></mat-datepicker>
-               @if (datosPersonalesForm.get('fechaNacimiento')?.invalid && datosPersonalesForm.get('fechaNacimiento')?.touched) {
-                 <mat-error>Fecha requerida</mat-error>
-               }
-           </mat-form-field>
-           <mat-form-field appearance="outline">
-               <mat-label>Documento</mat-label>
-               <input matInput formControlName="documento" required>
-               @if (datosPersonalesForm.get('documento')?.invalid && datosPersonalesForm.get('documento')?.touched) {
-                 <mat-error>Documento requerido</mat-error>
-               }
-           </mat-form-field>
-           <div>
-             <label id="genero-radio-group-label" style="display: block; margin-bottom: 5px; color: rgba(0,0,0,.6);">Género</label>
-             <mat-radio-group aria-labelledby="genero-radio-group-label" formControlName="genero" required>
-               <mat-radio-button value="Masculino" style="margin-right: 10px;">Masculino</mat-radio-button>
-               <mat-radio-button value="Femenino" style="margin-right: 10px;">Femenino</mat-radio-button>
-               <mat-radio-button value="Otro">Otro</mat-radio-button>
-             </mat-radio-group>
-             @if (datosPersonalesForm.get('genero')?.invalid && datosPersonalesForm.get('genero')?.touched) {
-               <mat-error style="font-size: 75%; color: #f44336;">Género requerido</mat-error>
-             }
-           </div>
-           <mat-form-field appearance="outline"> <mat-label>Estado Civil</mat-label> <input matInput formControlName="estadoCivil"> </mat-form-field>
-           <mat-form-field appearance="outline"> <mat-label>Fecha Primera Diálisis</mat-label> <input matInput [matDatepicker]="pickerDialisis" formControlName="fechaPrimeraDialisis" readonly> <mat-datepicker-toggle matSuffix [for]="pickerDialisis"></mat-datepicker-toggle> <mat-datepicker #pickerDialisis></mat-datepicker> </mat-form-field>
-           <mat-form-field appearance="outline"> <mat-label>Teléfonos</mat-label> <input matInput formControlName="telefonos" placeholder="Separados por coma"> </mat-form-field>
-           <mat-form-field appearance="outline"> <mat-label>Emails</mat-label> <input matInput type="email" formControlName="emails" placeholder="Separados por coma"> @if(datosPersonalesForm.get('emails')?.invalid && datosPersonalesForm.get('emails')?.touched){ <mat-error>Email inválido</mat-error> } </mat-form-field>
-           <mat-form-field appearance="outline"> <mat-label>Domicilio</mat-label> <input matInput formControlName="domicilio"> </mat-form-field>
-           <mat-form-field appearance="outline"> <mat-label>Obra Social</mat-label> <input matInput formControlName="obraSocial"> </mat-form-field>
-           <mat-form-field appearance="outline"> <mat-label>Institución</mat-label> <input matInput formControlName="institucion"> </mat-form-field>
+          <mat-form-field appearance="outline"> <mat-label>Nombre</mat-label> <input matInput formControlName="nombre" required> @if(datosPersonalesForm.get('nombre')?.invalid && datosPersonalesForm.get('nombre')?.touched){ <mat-error>Nombre requerido</mat-error> } </mat-form-field>
+          <mat-form-field appearance="outline"> <mat-label>Apellido</mat-label> <input matInput formControlName="apellido" required> @if(datosPersonalesForm.get('apellido')?.invalid && datosPersonalesForm.get('apellido')?.touched){ <mat-error>Apellido requerido</mat-error> } </mat-form-field>
+          <mat-form-field appearance="outline"> <mat-label>Fecha de Nacimiento</mat-label> <input matInput [matDatepicker]="pickerNacimiento" formControlName="fechaNacimiento" required readonly> <mat-datepicker-toggle matSuffix [for]="pickerNacimiento"></mat-datepicker-toggle> <mat-datepicker #pickerNacimiento></mat-datepicker> @if(datosPersonalesForm.get('fechaNacimiento')?.invalid && datosPersonalesForm.get('fechaNacimiento')?.touched){ <mat-error>Fecha requerida</mat-error> } </mat-form-field>
+          <mat-form-field appearance="outline"> <mat-label>Documento</mat-label> <input matInput formControlName="documento" required> @if(datosPersonalesForm.get('documento')?.invalid && datosPersonalesForm.get('documento')?.touched){ <mat-error>Documento requerido</mat-error> } </mat-form-field>
+          <div> <label id="genero-radio-group-label" style="display: block; margin-bottom: 5px; color: rgba(0,0,0,.6);">Género</label> <mat-radio-group aria-labelledby="genero-radio-group-label" formControlName="genero" required> <mat-radio-button value="Masculino" style="margin-right: 10px;">Masculino</mat-radio-button> <mat-radio-button value="Femenino" style="margin-right: 10px;">Femenino</mat-radio-button> <mat-radio-button value="Otro">Otro</mat-radio-button> </mat-radio-group> @if(datosPersonalesForm.get('genero')?.invalid && datosPersonalesForm.get('genero')?.touched){ <mat-error style="font-size: 75%; color: #f44336;">Género requerido</mat-error> } </div>
+          <mat-form-field appearance="outline"> <mat-label>Estado Civil</mat-label> <input matInput formControlName="estadoCivil"> </mat-form-field>
+          <mat-form-field appearance="outline"> <mat-label>Fecha Primera Diálisis</mat-label> <input matInput [matDatepicker]="pickerDialisis" formControlName="fechaPrimeraDialisis" readonly> <mat-datepicker-toggle matSuffix [for]="pickerDialisis"></mat-datepicker-toggle> <mat-datepicker #pickerDialisis></mat-datepicker> </mat-form-field>
+          <mat-form-field appearance="outline"> <mat-label>Teléfonos</mat-label> <input matInput formControlName="telefonos" placeholder="Separados por coma"> </mat-form-field>
+          <mat-form-field appearance="outline"> <mat-label>Emails</mat-label> <input matInput type="email" formControlName="emails" placeholder="Separados por coma"> @if(datosPersonalesForm.get('emails')?.invalid && datosPersonalesForm.get('emails')?.touched){ <mat-error>Email inválido</mat-error> } </mat-form-field>
+          <mat-form-field appearance="outline"> <mat-label>Domicilio</mat-label> <input matInput formControlName="domicilio"> </mat-form-field>
+          <mat-form-field appearance="outline"> <mat-label>Obra Social</mat-label> <input matInput formControlName="obraSocial"> </mat-form-field>
+          <mat-form-field appearance="outline"> <mat-label>Institución</mat-label> <input matInput formControlName="institucion"> </mat-form-field>
         </div>
+      </div>
+    }
 
-        @if (mensajeExito) {
-          <p style="color: green; text-align: center; margin-top: 15px; margin-bottom: 0;">{{ mensajeExito }}</p>
+    @case ('alergias') {
+      <div formGroupName="alergiasTransfusiones">
+         <h3>Alergias y Transfusiones</h3>
+         <h4>Alergias Conocidas</h4>
+         <div formArrayName="alergias">
+           @for (alergiaGroup of alergiasArray.controls; track $index) {
+             <div [formGroupName]="$index" style="display: flex; align-items: center; margin-bottom: 10px;">
+               <mat-form-field appearance="outline" style="flex-grow: 1; margin-right: 10px;">
+                 <mat-label>Descripción Alergia</mat-label>
+                 <input matInput formControlName="descripcion" required>
+                 @if (alergiaGroup.get('descripcion')?.invalid && alergiaGroup.get('descripcion')?.touched) { <mat-error>Requerido</mat-error> }
+               </mat-form-field>
+               <button mat-icon-button color="warn" type="button" (click)="eliminarAlergia($index)" aria-label="Eliminar alergia">
+                 <mat-icon>delete</mat-icon>
+               </button>
+             </div>
+           }
+           <button mat-stroked-button color="primary" type="button" (click)="agregarAlergia()">
+             <mat-icon>add</mat-icon> Añadir Alergia
+           </button>
+         </div>
+
+         <h4 style="margin-top: 20px;">Otros Datos</h4>
+         <div> <mat-checkbox formControlName="testigoJehova">Testigo de Jehová</mat-checkbox> </div>
+         <div style="margin-top: 10px;"> <mat-checkbox formControlName="seTransfunde">Se transfunde</mat-checkbox> </div>
+      </div>
+    }
+
+    @case ('antecedentes') {
+        <div formGroupName="antecedentesPersonales">
+            <h3>Antecedentes Personales</h3>
+             <div formArrayName="items">
+                @for (antecedenteGroup of antecedentesItems.controls; track $index) {
+                    <div [formGroupName]="$index" style="border: 1px solid #eee; padding: 10px; margin-bottom: 10px; border-radius: 4px; display: flex; align-items: flex-start; gap: 10px;">
+                        <mat-form-field appearance="outline" style="flex: 1;">
+                            <mat-label>Antecedente</mat-label>
+                            <input matInput formControlName="nombre" required>
+                             @if (antecedenteGroup.get('nombre')?.invalid && antecedenteGroup.get('nombre')?.touched) { <mat-error>Requerido</mat-error> }
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="flex: 2;">
+                            <mat-label>Detalle</mat-label>
+                            <textarea matInput formControlName="detalle" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+                        </mat-form-field>
+                        <button mat-icon-button color="warn" type="button" (click)="eliminarAntecedente($index)" aria-label="Eliminar antecedente">
+                           <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                }
+                <button mat-stroked-button color="primary" type="button" (click)="agregarAntecedente()">
+                    <mat-icon>add</mat-icon> Añadir Antecedente
+                </button>
+            </div>
+        </div>
+    }
+
+    @case ('medicacion') {
+      <div formGroupName="medicacionActual">
+        <h3>Medicación Actual</h3>
+         <p>(Formulario pendiente...)</p>
+      </div>
+    }
+    @case ('historia') {
+      <div formGroupName="historiaClinica">
+        <h3>Historia Clínica</h3>
+         <p>(Formulario pendiente...)</p>
+      </div>
+    }
+    @case ('dialisis') {
+      <div formGroupName="parametrosDialisis">
+        <h3>Parámetros Diálisis</h3>
+         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+             <mat-form-field appearance="outline"><mat-label>Peso Seco</mat-label><input matInput formControlName="pesoSeco"></mat-form-field>
+             <mat-form-field appearance="outline"><mat-label>Conductividad</mat-label><input matInput formControlName="conductividad"></mat-form-field>
+             <mat-form-field appearance="outline"><mat-label>Tiempo Diálisis</mat-label><input matInput formControlName="tiempoDialisis"></mat-form-field>
+             <mat-form-field appearance="outline"><mat-label>UF</mat-label><input matInput formControlName="uf"></mat-form-field>
+             <mat-form-field appearance="outline"><mat-label>Heparina</mat-label><input matInput formControlName="heparina"></mat-form-field>
+             <mat-form-field appearance="outline"><mat-label>Calcio</mat-label><input matInput formControlName="calcio"></mat-form-field>
+             <mat-form-field appearance="outline"><mat-label>Bicarbonato</mat-label><input matInput formControlName="bicarbonato"></mat-form-field>
+             <mat-form-field appearance="outline"><mat-label>Temperatura</mat-label><input matInput formControlName="temperatura"></mat-form-field>
+             <mat-form-field appearance="outline"><mat-label>Flujo Sangre</mat-label><input matInput formControlName="flujoSangre"></mat-form-field>
+             <mat-form-field appearance="outline"><mat-label>Acceso Vascular</mat-label><input matInput formControlName="accesoVascular"></mat-form-field>
+             <mat-form-field appearance="outline"><mat-label>Tipo Filtro</mat-label><input matInput formControlName="tipoFiltro"></mat-form-field>
+             <mat-form-field appearance="outline" style="grid-column: 1 / -1;"><mat-label>Observaciones</mat-label><textarea matInput formControlName="observacionesDialisis" cdkTextareaAutosize></textarea></mat-form-field>
+          </div>
+      </div>
+    }
+    @case ('evolucion') {
+      <div formGroupName="evolucionMensual">
+        <h3>Evolución Mensual</h3>
+         <p>(Formulario pendiente...)</p>
+      </div>
+    }
+
+
+    @default {
+      @if (!isLoading && pacienteId) {
+         <p>Seleccione una sección del menú lateral para ver o editar.</p>
+      } @else if (!isLoading && !pacienteId && seccionActiva !== 'datosPersonales') {
+          <p>Error: Intentando mostrar una sección no válida en modo creación.</p>
+      }
+       }
+  } @if (mensajeExito) {
+    <p style="color: green; text-align: center; margin-top: 15px;">{{ mensajeExito }}</p>
+  }
+  @if (mensajeError) {
+    <p style="color: red; text-align: center; margin-top: 15px;">{{ mensajeError }}</p>
+  }
+
+  @if (seccionActiva || !pacienteId) {
+    <mat-card-actions align="end" style="margin-top: 20px;">
+        @if (pacienteForm.get(getFormGroupName(seccionActiva ?? 'datos-personales')!); as currentFormGroup) {
+            <button mat-raised-button color="primary" type="submit" [disabled]="currentFormGroup.invalid || isLoading">
+               {{ isLoading ? 'Guardando...' : (!pacienteId ? 'Guardar Paciente y Ver Detalle' : 'Guardar Cambios en Sección') }}
+            </button>
         }
-        @if (mensajeError) {
-          <p style="color: red; text-align: center; margin-top: 15px; margin-bottom: 0;">{{ mensajeError }}</p>
-        }
+    </mat-card-actions>
+   }
 
-        <mat-card-actions align="end" style="margin-top: 20px;">
-          <button mat-button type="button" [routerLink]="['/dashboard']">Cancelar</button>
-          <button mat-raised-button color="primary" type="submit" [disabled]="datosPersonalesForm.invalid || isLoading">
-            {{ isLoading ? 'Guardando...' : (pacienteId ? 'Actualizar Datos Personales' : 'Guardar Paciente') }}
-          </button>
-        </mat-card-actions>
-
-      </form>
-    </mat-card-content>
-  </mat-card>
-
-</div>
+</form>

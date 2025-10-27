@@ -1,0 +1,29 @@
+/* src/app/pacientes/paciente-detail/paciente-detail.css */
+
+.detail-container {
+  height: 100%;
+}
+
+.sidenav-container {
+  height: calc(100vh - 80px); /* Ajusta según sea necesario */
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para el enlace activo en la lista */
+.active-link {
+  background-color: rgba(63, 81, 181, 0.1); /* Color suave */
+  color: #3f51b5; /* Color primario */
+  font-weight: 500;
+}
+.active-link mat-icon {
+    color: #3f51b5;
+}
+
+mat-nav-list a mat-icon {
+  margin-right: 16px;
+  color: rgba(0,0,0,.54);
+}
+
+mat-divider { /* Asegúrate de importar MatDividerModule si no está */
+    margin: 15px 0;
+}
