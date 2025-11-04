@@ -3,8 +3,11 @@ package org.example.clinica.service;
 import lombok.RequiredArgsConstructor;
 import org.example.clinica.model.mongo.Paciente;
 import org.example.clinica.repository.mongo.PacienteRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,12 +42,32 @@ public class PacienteService {
         Paciente pacienteExistente = pacienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
 
-        // 2. Transfiere el ID y la data QR inmutable del paciente existente al actualizado.
-        pacienteActualizado.setId(pacienteExistente.getId());
-        pacienteActualizado.setQrCodeData(pacienteExistente.getQrCodeData()); // Mantiene el QR original
+        // 2. Fusiona los campos no null del pacienteActualizado al pacienteExistente
+        // Excluye campos inmutables como id y qrCodeData
+        try {
+            PropertyDescriptor[] descriptors = BeanUtils.getPropertyDescriptors(Paciente.class);
+            for (PropertyDescriptor descriptor : descriptors) {
+                String propertyName = descriptor.getName();
+                if ("id".equals(propertyName) || "qrCodeData".equals(propertyName) || "class".equals(propertyName)) {
+                    continue; // Ignorar campos inmutables y la clase
+                }
+                Method readMethod = descriptor.getReadMethod();
+                if (readMethod != null) {
+                    Object value = readMethod.invoke(pacienteActualizado);
+                    if (value != null) { // Solo copiar si no es null
+                        Method writeMethod = descriptor.getWriteMethod();
+                        if (writeMethod != null) {
+                            writeMethod.invoke(pacienteExistente, value);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error al fusionar propiedades del paciente", e);
+        }
 
-        // 3. Guarda y devuelve el paciente actualizado
-        return pacienteRepository.save(pacienteActualizado);
+        // 3. Guarda y devuelve el paciente fusionado
+        return pacienteRepository.save(pacienteExistente);
     }
 
     public void eliminarPaciente(String id) {

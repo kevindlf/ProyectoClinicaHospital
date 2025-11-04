@@ -4,11 +4,16 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PacienteFormComponent } from './paciente-form/paciente-form.component'; // Renombrado si cambiaste nombre de archivo
 import { PacienteDetailComponent } from './paciente-detail/paciente-detail'; // Renombrado si cambiaste nombre de archivo
+import { PacienteListComponent } from './paciente-list/paciente-list.component';
 
 const routes: Routes = [
   {
     path: 'nuevo',
     component: PacienteFormComponent // Ruta para crear (solo datos personales)
+  },
+  {
+    path: 'listar',
+    component: PacienteListComponent // Nueva ruta para listar pacientes
   },
   {
     path: ':id/editar', // Ruta general para editar (la ajustaremos después)

@@ -1,7 +1,7 @@
 <div class="dashboard-container" style="padding: 40px; display: flex; flex-direction: column; align-items: center;">
 
   <div style="width: 100%; max-width: 800px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <h2>Bienvenido/a Médico/a</h2> // <<< Mensaje de Bienvenida
+    <h2>{{ mensajeBienvenida }}</h2> <!-- Mensaje de Bienvenida dinámico -->
     <button mat-flat-button color="warn" (click)="logout()">
       <mat-icon>logout</mat-icon> Cerrar Sesión
     </button>
@@ -14,14 +14,18 @@
     </mat-card-header>
     <mat-card-content style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; padding: 20px;">
 
-      <button mat-raised-button color="primary" (click)="irACrearPaciente()" style="min-width: 200px; padding: 15px;">
-        <mat-icon>person_add</mat-icon> Crear Paciente Nuevo
-      </button>
+      <!-- Botones solo para médicos y admins -->
+      <ng-container *ngIf="puedeGestionarPacientes()">
+        <button mat-raised-button color="primary" (click)="irACrearPaciente()" style="min-width: 200px; padding: 15px;">
+          <mat-icon>person_add</mat-icon> Crear Paciente Nuevo
+        </button>
 
-      <button mat-raised-button color="accent" (click)="irAModificarPaciente()" style="min-width: 200px; padding: 15px;">
-        <mat-icon>edit</mat-icon> Modificar Paciente Existente
-      </button>
+        <button mat-raised-button color="accent" (click)="irAModificarPaciente()" style="min-width: 200px; padding: 15px;">
+          <mat-icon>edit</mat-icon> Modificar Paciente Existente
+        </button>
+      </ng-container>
 
+      <!-- Botón para observar pacientes (todos los roles) -->
       <button mat-raised-button (click)="irAObservarPaciente()" style="min-width: 200px; padding: 15px;">
         <mat-icon>visibility</mat-icon> Observar Paciente
       </button>

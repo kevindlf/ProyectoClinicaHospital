@@ -18,7 +18,10 @@ import { MatIconModule } from '@angular/material/icon'; // Importamos MatIconMod
 })
 export class Dashboard implements OnInit {
 
-  // Quitamos las propiedades pacientes, errorMensaje, cargando
+  // Propiedades para el mensaje de bienvenida dinámico
+  rolUsuario: string | null = null;
+  nombreUsuario: string | null = null;
+  mensajeBienvenida: string = '';
 
   constructor(
     // Quitamos pacienteService
@@ -27,8 +30,24 @@ export class Dashboard implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // El ngOnInit ahora está vacío, podríamos poner lógica de bienvenida si quisiéramos
-    console.log('Dashboard del Médico cargado.');
+    // Obtener rol y nombre del usuario
+    this.rolUsuario = this.authService.obtenerRolUsuario();
+    this.nombreUsuario = this.authService.obtenerNombreUsuario();
+
+    // Construir mensaje de bienvenida
+    if (this.rolUsuario && this.nombreUsuario) {
+      const rolCapitalizado = this.rolUsuario.charAt(0).toUpperCase() + this.rolUsuario.slice(1).toLowerCase();
+      this.mensajeBienvenida = `Bienvenido ${rolCapitalizado} ${this.nombreUsuario} a la Clínica Nefrológica`;
+    } else {
+      this.mensajeBienvenida = 'Bienvenido a la Clínica Nefrológica';
+    }
+
+    console.log(`Dashboard cargado para rol: ${this.rolUsuario}`);
+  }
+
+  // Método para verificar si el usuario puede crear/modificar pacientes
+  puedeGestionarPacientes(): boolean {
+    return this.rolUsuario === 'MEDICO' || this.rolUsuario === 'ADMIN';
   }
 
   // Quitamos el método cargarPacientes()
@@ -39,10 +58,7 @@ export class Dashboard implements OnInit {
   }
 
   irAModificarPaciente(): void {
-    // Navegaremos a una futura ruta para listar/buscar pacientes
-    console.log('Navegando a Modificar Paciente (ruta pendiente)...');
-    // this.router.navigate(['/pacientes/lista']); // Ejemplo de ruta futura
-    alert('Funcionalidad "Modificar Paciente" pendiente.'); // Placeholder
+    this.router.navigate(['/pacientes/listar']);
   }
 
   irAObservarPaciente(): void {

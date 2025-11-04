@@ -1,8 +1,9 @@
 // src/app/auth/auth.interceptor.ts
 
-import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent } from '@angular/common/http';
+import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core'; // Importa inject
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { AuthService } from './auth'; // Importa tu AuthService
 
 // La función interceptora
@@ -25,9 +26,21 @@ export const authInterceptor: HttpInterceptorFn = (
       }
     });
     // 4. Pasa la petición MODIFICADA al siguiente manejador
-    return next(authReq);
+    return next(authReq).pipe(
+      catchError((error: HttpErrorResponse) => {
+        // 5. Si la respuesta es 401 (Unauthorized), el token podría estar expirado
+        if (error.status === 401) {
+          console.log('Token expirado o inválido detectado en interceptor. Cerrando sesión.');
+          authService.logout();
+          // Podrías redirigir al login aquí si tienes acceso al router
+          // inject(Router).navigate(['/auth/login']);
+        }
+        // Re-lanza el error para que el componente lo maneje
+        return throwError(() => error);
+      })
+    );
   } else {
-    // 5. Si no hay token, pasa la petición ORIGINAL sin modificar
+    // 6. Si no hay token, pasa la petición ORIGINAL sin modificar
     return next(req);
   }
 };

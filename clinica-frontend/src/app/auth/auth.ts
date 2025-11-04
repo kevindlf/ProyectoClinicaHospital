@@ -20,6 +20,7 @@ interface DecodedToken {
   roles?: string[]; // Si envías roles como array (ej: ["ROLE_ADMIN"])
   // O si envías un solo rol como string:
   // role?: string;
+  name?: string;    // Nombre del usuario (médico)
   iat?: number;     // Issued At timestamp
   exp?: number;     // Expiration timestamp
   // Agrega aquí cualquier otro claim que envíes (ej: nombre, idUsuario)
@@ -111,6 +112,36 @@ export class AuthService {
       } catch (error) {
         console.error('Error al decodificar el token JWT:', error);
         // Si el token no se puede decodificar, es inválido. Cerramos sesión.
+        this.logout();
+        return null;
+      }
+    }
+    return null; // No hay token
+  }
+
+  // --- NUEVO MÉTODO para obtener nombre del usuario ---
+  obtenerNombreUsuario(): string | null {
+    const token = this.obtenerToken();
+    if (token) {
+      try {
+        const decodedToken: DecodedToken = jwtDecode(token);
+        console.log("Token decodificado:", decodedToken); // Log para depuración
+
+        // Extraer el nombre del claim 'name'
+        if (decodedToken.name) {
+          return decodedToken.name;
+        }
+
+        // Si no hay 'name', podrías usar 'sub' como fallback (email)
+        if (decodedToken.sub) {
+          return decodedToken.sub;
+        }
+
+        console.warn("Claim 'name' no encontrado en el token JWT. Asegúrate de añadirlo en JwtService.java");
+        return null;
+
+      } catch (error) {
+        console.error('Error al decodificar el token JWT:', error);
         this.logout();
         return null;
       }

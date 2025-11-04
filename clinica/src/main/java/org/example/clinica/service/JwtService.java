@@ -55,6 +55,12 @@ public class JwtService {
 
         // 3. Añade los roles al mapa de claims extras con la clave "roles"
         extraClaims.put("roles", roles);
+
+        // 4. Si userDetails es Usuario, añade nombre y apellido
+        if (userDetails instanceof org.example.clinica.model.postgres.Usuario) {
+            org.example.clinica.model.postgres.Usuario usuario = (org.example.clinica.model.postgres.Usuario) userDetails;
+            extraClaims.put("name", usuario.getNombre() + " " + usuario.getApellido());
+        }
         // --- FIN MODIFICACIÓN ---
 
 

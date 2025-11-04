@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 // 1. Importa 'Event as RouterEvent' para el tipo genérico
 import { Router, RouterOutlet, Event as RouterEvent, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 // import { filter } from 'rxjs/operators'; // Ya no necesitamos filter
+import { AuthService } from './auth/auth'; // Importa AuthService
 
 @Component({
   selector: 'app-root',
@@ -13,9 +14,15 @@ import { Router, RouterOutlet, Event as RouterEvent, NavigationStart, Navigation
 export class App implements OnInit {
   protected readonly title = signal('clinica-frontend');
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {} // Inyecta AuthService
 
   ngOnInit(): void {
+    // Verificar automáticamente si el usuario está logueado al iniciar la aplicación
+    if (!this.authService.estaLogueado()) {
+      console.log('Token expirado o inválido. Redirigiendo al login.');
+      this.router.navigate(['/auth/login']);
+    }
+
     // 2. Escucha TODOS los eventos sin filtrar
     this.router.events.subscribe((event: RouterEvent) => { // Tipamos el evento
       console.log('>>> Router Event:', event); // Logueamos el objeto completo del evento

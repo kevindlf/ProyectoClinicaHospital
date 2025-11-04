@@ -32,10 +32,10 @@
          <h4>Alergias Conocidas</h4>
          <div formArrayName="alergias">
            @for (alergiaGroup of alergiasArray.controls; track $index) {
-             <div [formGroupName]="$index" style="display: flex; align-items: center; margin-bottom: 10px;">
+             <div [formGroupName]="$index" style="display: flex; align-items: center; margin-bottom: 10px; background-color: #ffebee; padding: 10px; border-radius: 4px;">
                <mat-form-field appearance="outline" style="flex-grow: 1; margin-right: 10px;">
                  <mat-label>Descripción Alergia</mat-label>
-                 <input matInput formControlName="descripcion" required>
+                 <input matInput formControlName="descripcion" required style="color: #d32f2f;">
                  @if (alergiaGroup.get('descripcion')?.invalid && alergiaGroup.get('descripcion')?.touched) { <mat-error>Requerido</mat-error> }
                </mat-form-field>
                <button mat-icon-button color="warn" type="button" (click)="eliminarAlergia($index)" aria-label="Eliminar alergia">
@@ -49,8 +49,24 @@
          </div>
 
          <h4 style="margin-top: 20px;">Otros Datos</h4>
-         <div> <mat-checkbox formControlName="testigoJehova">Testigo de Jehová</mat-checkbox> </div>
-         <div style="margin-top: 10px;"> <mat-checkbox formControlName="seTransfunde">Se transfunde</mat-checkbox> </div>
+         <div style="display: flex; align-items: center; margin-bottom: 10px;">
+           <label style="margin-right: 10px; width: 200px;">¿Es Testigo de Jehová?</label>
+           <mat-form-field appearance="outline" style="width: 100px;">
+             <mat-select formControlName="testigoJehova">
+               <mat-option value="true">Sí</mat-option>
+               <mat-option value="false">No</mat-option>
+             </mat-select>
+           </mat-form-field>
+         </div>
+         <div style="display: flex; align-items: center;">
+           <label style="margin-right: 10px; width: 200px;">¿Se transfunde?</label>
+           <mat-form-field appearance="outline" style="width: 100px;">
+             <mat-select formControlName="seTransfunde">
+               <mat-option value="true">Sí</mat-option>
+               <mat-option value="false">No</mat-option>
+             </mat-select>
+           </mat-form-field>
+         </div>
       </div>
     }
 
@@ -84,38 +100,221 @@
     @case ('medicacion') {
       <div formGroupName="medicacionActual">
         <h3>Medicación Actual</h3>
-         <p>(Formulario pendiente...)</p>
+        <div formArrayName="items">
+          @for (medicacionGroup of medicacionItems.controls; track $index) {
+            <div [formGroupName]="$index" style="border: 1px solid #d32f2f; padding: 10px; margin-bottom: 10px; border-radius: 4px; background-color: #ffebee;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <mat-form-field appearance="outline">
+                  <mat-label>Nombre</mat-label>
+                  <input matInput formControlName="nombre" required style="color: #d32f2f;">
+                  @if (medicacionGroup.get('nombre')?.invalid && medicacionGroup.get('nombre')?.touched) { <mat-error>Requerido</mat-error> }
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Dosis</mat-label>
+                  <input matInput formControlName="dosis" required style="color: #d32f2f;">
+                  @if (medicacionGroup.get('dosis')?.invalid && medicacionGroup.get('dosis')?.touched) { <mat-error>Requerido</mat-error> }
+                </mat-form-field>
+              </div>
+              <div style="margin-top: 15px; display: flex; justify-content: space-between;">
+                <button mat-stroked-button color="primary" type="button" (click)="eliminarMedicacion($index)">
+                  <mat-icon>delete</mat-icon> Eliminar
+                </button>
+              </div>
+            </div>
+          }
+          <button mat-stroked-button color="primary" type="button" (click)="agregarMedicacion()">
+            <mat-icon>add</mat-icon> Añadir Medicación
+          </button>
+        </div>
       </div>
     }
+
     @case ('historia') {
       <div formGroupName="historiaClinica">
         <h3>Historia Clínica</h3>
-         <p>(Formulario pendiente...)</p>
+        <div formArrayName="items">
+          @for (historiaGroup of historiaItems.controls; track $index) {
+            <div [formGroupName]="$index" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 8px; background-color: #fafafa;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <mat-form-field appearance="outline">
+                  <mat-label>Fecha</mat-label>
+                  <input matInput formControlName="fecha" type="date" required readonly>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Profesional</mat-label>
+                  <input matInput formControlName="profesional" required readonly>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Grupo Sanguíneo</mat-label>
+                  <mat-select formControlName="grupoSanguineo" required>
+                    <mat-option value="A+">A+</mat-option>
+                    <mat-option value="A-">A-</mat-option>
+                    <mat-option value="B+">B+</mat-option>
+                    <mat-option value="B-">B-</mat-option>
+                    <mat-option value="AB+">AB+</mat-option>
+                    <mat-option value="AB-">AB-</mat-option>
+                    <mat-option value="O+">O+</mat-option>
+                    <mat-option value="O-">O-</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Peso (kg)</mat-label>
+                  <input matInput formControlName="peso" type="number">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Peso Seco (kg)</mat-label>
+                  <input matInput formControlName="pesoSeco" type="number">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Altura (cm)</mat-label>
+                  <input matInput formControlName="altura" type="number">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Fecha Primera Diálisis (Vida)</mat-label>
+                  <input matInput formControlName="fechaPrimeraDialisisVida" type="date">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Fecha Primera Diálisis (Clínica)</mat-label>
+                  <input matInput formControlName="fechaPrimeraDialisisClinica" type="date">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Heparina (dosis)</mat-label>
+                  <input matInput formControlName="heparina">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Antecedentes de Enfermedad</mat-label>
+                  <textarea matInput formControlName="antecedentesEnfermedad" cdkTextareaAutosize></textarea>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Medicación Prescrita para Diálisis</mat-label>
+                  <textarea matInput formControlName="medicacionPrescritaDialisis" cdkTextareaAutosize></textarea>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Medicación Domiciliaria</mat-label>
+                  <textarea matInput formControlName="medicacionDomiciliaria" cdkTextareaAutosize></textarea>
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="grid-column: 1 / -1;">
+                  <mat-label>Informe General</mat-label>
+                  <textarea matInput formControlName="detalle" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="3" cdkAutosizeMaxRows="10" required></textarea>
+                </mat-form-field>
+              </div>
+              <div style="margin-top: 15px; display: flex; justify-content: space-between;">
+                <button mat-stroked-button color="primary" type="button" (click)="eliminarHistoria($index)">
+                  <mat-icon>delete</mat-icon> Eliminar
+                </button>
+              </div>
+            </div>
+          }
+          <button mat-stroked-button color="primary" type="button" (click)="agregarHistoria()">
+            <mat-icon>add</mat-icon> Añadir Historial
+          </button>
+        </div>
       </div>
     }
+
     @case ('dialisis') {
       <div formGroupName="parametrosDialisis">
         <h3>Parámetros Diálisis</h3>
          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-             <mat-form-field appearance="outline"><mat-label>Peso Seco</mat-label><input matInput formControlName="pesoSeco"></mat-form-field>
-             <mat-form-field appearance="outline"><mat-label>Conductividad</mat-label><input matInput formControlName="conductividad"></mat-form-field>
-             <mat-form-field appearance="outline"><mat-label>Tiempo Diálisis</mat-label><input matInput formControlName="tiempoDialisis"></mat-form-field>
-             <mat-form-field appearance="outline"><mat-label>UF</mat-label><input matInput formControlName="uf"></mat-form-field>
-             <mat-form-field appearance="outline"><mat-label>Heparina</mat-label><input matInput formControlName="heparina"></mat-form-field>
-             <mat-form-field appearance="outline"><mat-label>Calcio</mat-label><input matInput formControlName="calcio"></mat-form-field>
-             <mat-form-field appearance="outline"><mat-label>Bicarbonato</mat-label><input matInput formControlName="bicarbonato"></mat-form-field>
-             <mat-form-field appearance="outline"><mat-label>Temperatura</mat-label><input matInput formControlName="temperatura"></mat-form-field>
-             <mat-form-field appearance="outline"><mat-label>Flujo Sangre</mat-label><input matInput formControlName="flujoSangre"></mat-form-field>
-             <mat-form-field appearance="outline"><mat-label>Acceso Vascular</mat-label><input matInput formControlName="accesoVascular"></mat-form-field>
-             <mat-form-field appearance="outline"><mat-label>Tipo Filtro</mat-label><input matInput formControlName="tipoFiltro"></mat-form-field>
-             <mat-form-field appearance="outline" style="grid-column: 1 / -1;"><mat-label>Observaciones</mat-label><textarea matInput formControlName="observacionesDialisis" cdkTextareaAutosize></textarea></mat-form-field>
+             <div style="display: flex; flex-direction: column; align-items: center;">
+               <label style="font-weight: bold; margin-bottom: 5px;">QT</label>
+               <mat-form-field appearance="outline" style="width: 100%;"><input matInput formControlName="qt"></mat-form-field>
+             </div>
+             <div style="display: flex; flex-direction: column; align-items: center;">
+               <label style="font-weight: bold; margin-bottom: 5px;">QD</label>
+               <mat-form-field appearance="outline" style="width: 100%;"><input matInput formControlName="qd"></mat-form-field>
+             </div>
+             <div style="display: flex; flex-direction: column; align-items: center;">
+               <label style="font-weight: bold; margin-bottom: 5px;">QB</label>
+               <mat-form-field appearance="outline" style="width: 100%;"><input matInput formControlName="qb"></mat-form-field>
+             </div>
+             <div style="display: flex; flex-direction: column; align-items: center;">
+               <label style="font-weight: bold; margin-bottom: 5px;">ACCESO VASCULAR</label>
+               <mat-form-field appearance="outline" style="width: 100%;"><input matInput formControlName="accesoVascular"></mat-form-field>
+             </div>
+             <div style="display: flex; flex-direction: column; align-items: center;">
+               <label style="font-weight: bold; margin-bottom: 5px;">AGUJAS</label>
+               <mat-form-field appearance="outline" style="width: 100%;"><input matInput formControlName="agujas"></mat-form-field>
+             </div>
+             <div style="display: flex; flex-direction: column; align-items: center;">
+               <label style="font-weight: bold; margin-bottom: 5px;">HEPARINA</label>
+               <mat-form-field appearance="outline" style="width: 100%;"><input matInput formControlName="heparina"></mat-form-field>
+             </div>
+             <div style="display: flex; flex-direction: column; align-items: center;">
+               <label style="font-weight: bold; margin-bottom: 5px;">FILTRO</label>
+               <mat-form-field appearance="outline" style="width: 100%;"><input matInput formControlName="filtro"></mat-form-field>
+             </div>
+             <div style="display: flex; flex-direction: column; align-items: center;">
+               <label style="font-weight: bold; margin-bottom: 5px;">PESO SECO</label>
+               <mat-form-field appearance="outline" style="width: 100%;"><input matInput formControlName="pesoSeco"></mat-form-field>
+             </div>
+             <div style="display: flex; flex-direction: column; align-items: center;">
+               <label style="font-weight: bold; margin-bottom: 5px;">SODIO</label>
+               <mat-form-field appearance="outline" style="width: 100%;"><input matInput formControlName="sodio"></mat-form-field>
+             </div>
+             <div style="display: flex; flex-direction: column; align-items: center;">
+               <label style="font-weight: bold; margin-bottom: 5px;">BICARBONATO</label>
+               <mat-form-field appearance="outline" style="width: 100%;"><input matInput formControlName="bicarbonato"></mat-form-field>
+             </div>
+             <div style="display: flex; flex-direction: column; align-items: center;">
+               <label style="font-weight: bold; margin-bottom: 5px;">UF</label>
+               <mat-form-field appearance="outline" style="width: 100%;"><input matInput formControlName="uf"></mat-form-field>
+             </div>
+             <div style="display: flex; flex-direction: column; align-items: center;">
+               <label style="font-weight: bold; margin-bottom: 5px;">ERITROPOYETINA</label>
+               <mat-form-field appearance="outline" style="width: 100%;"><input matInput formControlName="eritropoyetina"></mat-form-field>
+             </div>
+             <div style="display: flex; flex-direction: column; align-items: center;">
+               <label style="font-weight: bold; margin-bottom: 5px;">HIERRO</label>
+               <mat-form-field appearance="outline" style="width: 100%;"><input matInput formControlName="hierro"></mat-form-field>
+             </div>
           </div>
+          
       </div>
     }
+
     @case ('evolucion') {
       <div formGroupName="evolucionMensual">
         <h3>Evolución Mensual</h3>
-         <p>(Formulario pendiente...)</p>
+        <div formArrayName="items">
+          @for (evolucionGroup of evolucionItems.controls; track $index) {
+            <div [formGroupName]="$index" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 8px; background-color: #fafafa;">
+              <div style="display: grid; grid-template-columns: 1fr 3fr; gap: 15px;">
+                <mat-form-field appearance="outline">
+                  <mat-label>Mes</mat-label>
+                  <mat-select formControlName="mes" required>
+                    <mat-option value="Enero">Enero</mat-option>
+                    <mat-option value="Febrero">Febrero</mat-option>
+                    <mat-option value="Marzo">Marzo</mat-option>
+                    <mat-option value="Abril">Abril</mat-option>
+                    <mat-option value="Mayo">Mayo</mat-option>
+                    <mat-option value="Junio">Junio</mat-option>
+                    <mat-option value="Julio">Julio</mat-option>
+                    <mat-option value="Agosto">Agosto</mat-option>
+                    <mat-option value="Septiembre">Septiembre</mat-option>
+                    <mat-option value="Octubre">Octubre</mat-option>
+                    <mat-option value="Noviembre">Noviembre</mat-option>
+                    <mat-option value="Diciembre">Diciembre</mat-option>
+                  </mat-select>
+                  @if (evolucionGroup.get('mes')?.invalid && evolucionGroup.get('mes')?.touched) { <mat-error>Requerido</mat-error> }
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Detalle</mat-label>
+                  <textarea matInput formControlName="detalle" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="3" cdkAutosizeMaxRows="10" required></textarea>
+                  @if (evolucionGroup.get('detalle')?.invalid && evolucionGroup.get('detalle')?.touched) { <mat-error>Requerido</mat-error> }
+                </mat-form-field>
+              </div>
+              <div style="margin-top: 15px; display: flex; justify-content: space-between;">
+                <button mat-stroked-button color="primary" type="button" (click)="eliminarEvolucion($index)">
+                  <mat-icon>delete</mat-icon> Eliminar
+                </button>
+              </div>
+            </div>
+          }
+          <button mat-stroked-button color="primary" type="button" (click)="agregarEvolucion()">
+            <mat-icon>add</mat-icon> Añadir Evolución
+          </button>
+        </div>
       </div>
     }
 
@@ -135,13 +334,11 @@
   }
 
   @if (seccionActiva || !pacienteId) {
-    <mat-card-actions align="end" style="margin-top: 20px;">
         @if (pacienteForm.get(getFormGroupName(seccionActiva ?? 'datos-personales')!); as currentFormGroup) {
             <button mat-raised-button color="primary" type="submit" [disabled]="currentFormGroup.invalid || isLoading">
                {{ isLoading ? 'Guardando...' : (!pacienteId ? 'Guardar Paciente y Ver Detalle' : 'Guardar Cambios en Sección') }}
             </button>
         }
-    </mat-card-actions>
    }
 
 </form>

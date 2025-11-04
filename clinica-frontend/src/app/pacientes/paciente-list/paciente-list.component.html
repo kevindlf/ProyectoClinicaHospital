@@ -1,0 +1,82 @@
+<div class="paciente-list-container" style="padding: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Lista de Pacientes</h2>
+    <button mat-raised-button color="primary" (click)="volverAlDashboard()">
+      <mat-icon>arrow_back</mat-icon> Volver al Dashboard
+    </button>
+  </div>
+
+  <!-- Buscador -->
+  <mat-form-field appearance="outline" style="width: 100%; margin-bottom: 20px;">
+    <mat-label>Buscar paciente (documento, nombre o apellido)</mat-label>
+    <input matInput [formControl]="searchControl" placeholder="Ingrese término de búsqueda...">
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <!-- Mensaje de error -->
+  <div *ngIf="errorMessage" class="error-message" style="color: red; margin-bottom: 20px;">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" style="text-align: center; margin: 20px;">
+    <mat-spinner></mat-spinner>
+    <p>Cargando pacientes...</p>
+  </div>
+
+  <!-- Tabla de pacientes -->
+  <div *ngIf="!isLoading && pacientesFiltrados.length > 0" class="table-container">
+    <table mat-table [dataSource]="pacientesFiltrados" class="mat-elevation-z8" style="width: 100%;">
+
+      <!-- Columna Documento -->
+      <ng-container matColumnDef="documento">
+        <th mat-header-cell *matHeaderCellDef>Documento</th>
+        <td mat-cell *matCellDef="let paciente">{{ paciente.documento }}</td>
+      </ng-container>
+
+      <!-- Columna Nombre -->
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let paciente">{{ paciente.nombre }}</td>
+      </ng-container>
+
+      <!-- Columna Apellido -->
+      <ng-container matColumnDef="apellido">
+        <th mat-header-cell *matHeaderCellDef>Apellido</th>
+        <td mat-cell *matCellDef="let paciente">{{ paciente.apellido }}</td>
+      </ng-container>
+
+      <!-- Columna Fecha Nacimiento -->
+      <ng-container matColumnDef="fechaNacimiento">
+        <th mat-header-cell *matHeaderCellDef>Fecha Nacimiento</th>
+        <td mat-cell *matCellDef="let paciente">{{ paciente.fechaNacimiento | date:'dd/MM/yyyy' }}</td>
+      </ng-container>
+
+      <!-- Columna Acciones -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let paciente">
+          <button mat-icon-button color="primary" (click)="editarPaciente(paciente)" matTooltip="Editar paciente">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="eliminarPaciente(paciente)" matTooltip="Eliminar paciente">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+  <!-- Mensaje cuando no hay pacientes -->
+  <div *ngIf="!isLoading && pacientesFiltrados.length === 0 && pacientes.length === 0" style="text-align: center; margin: 40px;">
+    <p>No hay pacientes registrados en el sistema.</p>
+  </div>
+
+  <!-- Mensaje cuando no hay resultados de búsqueda -->
+  <div *ngIf="!isLoading && pacientesFiltrados.length === 0 && pacientes.length > 0" style="text-align: center; margin: 40px;">
+    <p>No se encontraron pacientes que coincidan con la búsqueda.</p>
+  </div>
+</div>

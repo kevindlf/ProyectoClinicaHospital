@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../material/material-module';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router'; // RouterLink ya estaba
 import { PacienteService, Paciente } from '../paciente.service';
+import { AuthService } from '../../auth/auth'; // Importa AuthService desde auth.ts
 import { Observable, Subscription, of } from 'rxjs'; // Importa Subscription y 'of'
 import { HttpErrorResponse } from '@angular/common/http';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
@@ -35,7 +36,8 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private route: ActivatedRoute, // Ruta actual (hija o /nuevo)
     private router: Router,
-    private pacienteService: PacienteService
+    private pacienteService: PacienteService,
+    private authService: AuthService // Inyecta AuthService
   ) {}
 
   ngOnInit(): void {
@@ -134,11 +136,7 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
           items: this.fb.array([]) // Array de FormGroups { fecha: string, detalle: string }
       }),
       parametrosDialisis: this.fb.group({ // Mapea a 'dialisis'
-          // Define aquí los campos individuales que mapean tu Map<String, String>
-          pesoSeco: [''], conductividad: [''], tiempoDialisis: [''],
-          uf: [''], heparina: [''], calcio: [''], bicarbonato: [''],
-          temperatura: [''], flujoSangre: [''], accesoVascular: [''],
-          tipoFiltro: [''], observacionesDialisis: [''] // Ejemplo, ajusta nombres
+          qt: [''], qd: [''], qb: [''], accesoVascular: [''], agujas: [''], heparina: [''], filtro: [''], pesoSeco: [''], sodio: [''], bicarbonato: [''], uf: [''], eritropoyetina: [''], hierro: ['']
       }),
       evolucionMensual: this.fb.group({ // Mapea a 'evolucion'
           items: this.fb.array([]) // Array de FormGroups { mes: string, detalle: string }
@@ -167,7 +165,25 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
 
   // Historia Clinica
   get historiaItems(): FormArray { return this.pacienteForm.get('historiaClinica.items') as FormArray; }
-  nuevaHistoria(): FormGroup { return this.fb.group({ fecha: [new Date().toISOString().split('T')[0], Validators.required], detalle: ['', Validators.required] }); } // Fecha actual por defecto
+  nuevaHistoria(): FormGroup {
+    const fechaActual = new Date().toISOString().split('T')[0];
+    const profesional = this.authService.obtenerNombreUsuario() || ''; // Obtener el nombre del usuario logueado
+    return this.fb.group({
+      fecha: [fechaActual, Validators.required],
+      profesional: [profesional, Validators.required],
+      grupoSanguineo: ['', Validators.required],
+      peso: [''],
+      pesoSeco: [''],
+      altura: [''],
+      fechaPrimeraDialisisVida: [''],
+      fechaPrimeraDialisisClinica: [''],
+      heparina: [''],
+      antecedentesEnfermedad: [''],
+      medicacionPrescritaDialisis: [''],
+      medicacionDomiciliaria: [''],
+      detalle: ['', Validators.required]
+    });
+  }
   agregarHistoria(): void { this.historiaItems.push(this.nuevaHistoria()); }
   eliminarHistoria(index: number): void { this.historiaItems.removeAt(index); }
 
@@ -192,21 +208,58 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
           this.medicacionItems.clear();
           this.historiaItems.clear();
           this.evolucionItems.clear();
-          // Resetea todo el form (limpia validadores) antes de aplicar datos
-          this.pacienteForm.reset();
-          // Aplica los datos recibidos
-          this.pacienteForm.patchValue(paciente);
-          // Rellena los FormArrays
+
+          // Prepara y aplica datos para cada sección
+          // Datos Personales
+          const datosPersonales = {
+            nombre: paciente.nombre,
+            apellido: paciente.apellido,
+            fechaNacimiento: paciente.fechaNacimiento ? new Date(paciente.fechaNacimiento) : null,
+            documento: paciente.documento,
+            genero: paciente.genero,
+            estadoCivil: paciente.estadoCivil,
+            fechaPrimeraDialisis: paciente.fechaPrimeraDialisis ? new Date(paciente.fechaPrimeraDialisis) : null,
+            telefonos: paciente.telefonos?.join(', ') || '',
+            emails: paciente.emails?.join(', ') || '',
+            domicilio: paciente.domicilio,
+            obraSocial: paciente.obraSocial,
+            institucion: paciente.institucion
+          };
+          this.datosPersonalesForm.patchValue(datosPersonales);
+
+          // Alergias y Transfusiones
+          const alergiasTransfusiones = {
+            testigoJehova: paciente.testigoJehova,
+            seTransfunde: paciente.seTransfunde
+          };
+          this.alergiasTransfusionesForm.patchValue(alergiasTransfusiones);
           paciente.alergias?.forEach(item => this.alergiasArray.push(this.fb.group(item)));
+
+          // Antecedentes Personales
           paciente.antecedentesPersonales?.forEach(item => this.antecedentesItems.push(this.fb.group(item)));
+
+          // Medicación Actual
           paciente.medicacionActual?.forEach(item => this.medicacionItems.push(this.fb.group(item)));
+
+          // Historia Clínica
           paciente.historiaClinica?.forEach(item => this.historiaItems.push(this.fb.group(item)));
+
+          // Parámetros de Diálisis
+          if (paciente.parametrosDialisis) {
+            this.parametrosDialisisForm.patchValue(paciente.parametrosDialisis);
+          }
+
+          // Evolución Mensual
           paciente.evolucionMensual?.forEach(item => this.evolucionItems.push(this.fb.group(item)));
 
           console.log("Formulario después de patchValue:", this.pacienteForm.value);
           this.isLoading = false; this.dataLoaded = true;
         },
-        error: (err: HttpErrorResponse | any) => { /* ... manejo error ... */ }
+        error: (err: HttpErrorResponse | any) => {
+          console.error('Error al cargar paciente:', err);
+          this.mensajeError = 'Error al cargar los datos del paciente.';
+          this.isLoading = false;
+        }
       });
   }
 
@@ -250,8 +303,9 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
     } else {
       // --- ACTUALIZACIÓN ---
       console.log(`Enviando para ACTUALIZAR sección ${formGroupName} del paciente ${this.pacienteId}:`, datosSeccion);
-      // Envía solo la sección modificada
-      const datosActualizar: Partial<Paciente> = { [formGroupName!]: datosSeccion };
+      // Mapea los datos del formulario al formato esperado por el backend
+      const datosActualizar: Partial<Paciente> = this.mapFormDataToBackend(formGroupName!, datosSeccion);
+      console.log('Datos mapeados para actualizar:', datosActualizar);
       guardarObservable = this.pacienteService.actualizarPaciente(this.pacienteId!, datosActualizar);
     }
 
@@ -295,6 +349,53 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
      });
   }
 
+  // Método para mapear datos del formulario al formato esperado por el backend
+  private mapFormDataToBackend(formGroupName: string, datosSeccion: any): Partial<Paciente> {
+    switch (formGroupName) {
+      case 'datosPersonales':
+        return {
+          ...datosSeccion,
+          telefonos: datosSeccion.telefonos?.split(',').map((s: string) => s.trim()).filter((s: string) => s) || [],
+          emails: datosSeccion.emails?.split(',').map((s: string) => s.trim()).filter((s: string) => s) || []
+        };
+      case 'alergiasTransfusiones':
+        return {
+          alergias: datosSeccion.alergias,
+          testigoJehova: datosSeccion.testigoJehova,
+          seTransfunde: datosSeccion.seTransfunde
+        };
+      case 'antecedentesPersonales':
+        return {
+          antecedentesPersonales: datosSeccion.items
+        };
+      case 'medicacionActual':
+        return {
+          medicacionActual: datosSeccion.items
+        };
+      case 'historiaClinica':
+        return {
+          historiaClinica: datosSeccion.items
+        };
+      case 'parametrosDialisis':
+        // Convertir el FormGroup a Map<String, String>
+        const parametros: { [key: string]: string } = {};
+        Object.keys(datosSeccion).forEach(key => {
+          if (datosSeccion[key]) {
+            parametros[key] = datosSeccion[key];
+          }
+        });
+        return {
+          parametrosDialisis: parametros
+        };
+      case 'evolucionMensual':
+        return {
+          evolucionMensual: datosSeccion.items
+        };
+      default:
+        return {};
+    }
+  }
+
   // Getters para todos los FormGroups/FormArrays
   get datosPersonalesForm(): FormGroup { return this.pacienteForm.get('datosPersonales') as FormGroup; }
   get alergiasTransfusionesForm(): FormGroup { return this.pacienteForm.get('alergiasTransfusiones') as FormGroup; }
@@ -303,4 +404,9 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
   get historiaClinicaForm(): FormGroup { return this.pacienteForm.get('historiaClinica') as FormGroup; }
   get parametrosDialisisForm(): FormGroup { return this.pacienteForm.get('parametrosDialisis') as FormGroup; }
   get evolucionMensualForm(): FormGroup { return this.pacienteForm.get('evolucionMensual') as FormGroup; }
+
+  // Métodos de navegación
+  volverAlDashboard(): void {
+    this.router.navigate(['/dashboard']);
+  }
 }
