@@ -44,8 +44,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/pacientes").hasAnyRole(Role.ADMIN.name(), Role.MEDICO.name())
                         .requestMatchers(HttpMethod.PUT, "/api/pacientes/**").hasAnyRole(Role.ADMIN.name(), Role.MEDICO.name())
                         .requestMatchers(HttpMethod.DELETE, "/api/pacientes/**").hasAnyRole(Role.ADMIN.name(), Role.MEDICO.name())
-                        .requestMatchers(HttpMethod.GET, "/api/pacientes/**").hasAnyRole(Role.ADMIN.name(), Role.MEDICO.name(), Role.ENFERMERO.name())
-                        .requestMatchers(HttpMethod.GET, "/api/pacientes").hasAnyRole(Role.ADMIN.name(), Role.MEDICO.name(), Role.ENFERMERO.name())
+                        .requestMatchers(HttpMethod.GET, "/api/pacientes/**").hasAnyRole(Role.ADMIN.name(), Role.MEDICO.name(), Role.ENFERMERO.name(), Role.TECNICO.name())
+                        .requestMatchers(HttpMethod.GET, "/api/pacientes").hasAnyRole(Role.ADMIN.name(), Role.MEDICO.name(), Role.ENFERMERO.name(), Role.TECNICO.name())
 
                         // Permisos de Usuarios (sin cambios)
                         .requestMatchers("/api/usuarios/**").hasRole(Role.ADMIN.name())

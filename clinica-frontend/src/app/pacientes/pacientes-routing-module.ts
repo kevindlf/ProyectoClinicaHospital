@@ -5,6 +5,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { PacienteFormComponent } from './paciente-form/paciente-form.component'; // Renombrado si cambiaste nombre de archivo
 import { PacienteDetailComponent } from './paciente-detail/paciente-detail'; // Renombrado si cambiaste nombre de archivo
 import { PacienteListComponent } from './paciente-list/paciente-list.component';
+import { PacienteObservarListComponent } from './paciente-observar-list/paciente-observar-list.component';
+import { PacienteObservarDetailComponent } from './paciente-observar-detail/paciente-observar-detail.component';
 
 const routes: Routes = [
   {
@@ -14,6 +16,10 @@ const routes: Routes = [
   {
     path: 'listar',
     component: PacienteListComponent // Nueva ruta para listar pacientes
+  },
+  {
+    path: 'observar',
+    component: PacienteObservarListComponent // Nueva ruta para observar pacientes
   },
   {
     path: ':id/editar', // Ruta general para editar (la ajustaremos después)
@@ -64,6 +70,21 @@ const routes: Routes = [
       }
     ]
     // --- FIN RUTAS HIJAS ---
+  },
+  {
+    path: ':id/observar', // Nueva ruta para observar paciente
+    component: PacienteObservarDetailComponent,
+    children: [
+      {
+        path: ':seccion',
+        component: PacienteObservarDetailComponent
+      },
+      {
+        path: '',
+        redirectTo: 'datos-personales',
+        pathMatch: 'full'
+      }
+    ]
   },
   {
     path: '', // Ruta base del módulo /pacientes

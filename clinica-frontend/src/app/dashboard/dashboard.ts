@@ -62,10 +62,7 @@ export class Dashboard implements OnInit {
   }
 
   irAObservarPaciente(): void {
-    // Navegaremos a la misma futura ruta para listar/buscar pacientes
-    console.log('Navegando a Observar Paciente (ruta pendiente)...');
-    // this.router.navigate(['/pacientes/lista']); // Ejemplo de ruta futura
-    alert('Funcionalidad "Observar Paciente" pendiente.'); // Placeholder
+    this.router.navigate(['/pacientes/observar']);
   }
   // --- FIN NUEVOS MÉTODOS ---
 
