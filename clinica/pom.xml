@@ -74,6 +74,7 @@
             <version>${jsonwebtoken.version}</version>
             <scope>runtime</scope>
         </dependency>
+
         <!-- GENERACIÓN DE CÓDIGO QR (ZXING) -->
         <!-- Core de la librería -->
         <dependency>
@@ -86,6 +87,12 @@
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
             <version>3.5.3</version>
+        </dependency>
+
+        <!-- ENVÍO DE EMAIL (Spring Boot Mail) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
         <!-- UTILIDADES -->

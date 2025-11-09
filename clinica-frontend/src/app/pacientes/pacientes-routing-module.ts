@@ -59,6 +59,10 @@ const routes: Routes = [
         path: 'evolucion', // -> /pacientes/:id/detalle/evolucion
         component: PacienteFormComponent // Temporalmente apunta al mismo form
       },
+      {
+        path: 'qr', // -> /pacientes/:id/detalle/qr
+        component: PacienteObservarDetailComponent // Usamos el componente de observación para mostrar QR
+      },
       // --- FIN RUTAS AÑADIDAS ---
 
       // Ruta hija por defecto: Cuando se navega a /pacientes/:id/detalle,

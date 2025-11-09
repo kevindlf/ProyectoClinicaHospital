@@ -17,9 +17,27 @@ export class App implements OnInit {
   constructor(private router: Router, private authService: AuthService) {} // Inyecta AuthService
 
   ngOnInit(): void {
-    // Verificar automáticamente si el usuario está logueado al iniciar la aplicación
-    if (!this.authService.estaLogueado()) {
-      console.log('Token expirado o inválido. Redirigiendo al login.');
+    // Escuchar eventos de navegación para detectar acceso a rutas protegidas
+    this.router.events.subscribe((event: RouterEvent) => {
+      if (event instanceof NavigationStart) {
+        const targetUrl = event.url;
+        const isPatientAccess = targetUrl.startsWith('/pacientes/');
+
+        if (!this.authService.estaLogueado() && isPatientAccess) {
+          // Guardar la URL de retorno para después del login
+          localStorage.setItem('returnUrl', targetUrl);
+          console.log('Acceso a pacientes detectado, guardando URL de retorno:', targetUrl);
+          // Redirigir al login
+          this.router.navigate(['/auth/login']);
+        }
+      }
+    });
+
+    // Verificar si ya estamos en una ruta que requiere login al iniciar
+    const currentUrl = this.router.url;
+    if (!this.authService.estaLogueado() && currentUrl.startsWith('/pacientes/')) {
+      localStorage.setItem('returnUrl', currentUrl);
+      console.log('Aplicación iniciada en ruta de pacientes, guardando URL de retorno:', currentUrl);
       this.router.navigate(['/auth/login']);
     }
 

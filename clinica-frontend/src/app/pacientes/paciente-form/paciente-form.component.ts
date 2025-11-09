@@ -1,5 +1,3 @@
-// src/app/pacientes/paciente-form/paciente-form.component.ts
-
 import { Component, OnInit, OnDestroy } from '@angular/core'; // Importa OnDestroy
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms'; // Importa FormArray
 import { CommonModule } from '@angular/common';
@@ -118,7 +116,7 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
       datosPersonales: this.fb.group({ // Mapea a 'datos-personales'
         nombre: ['', Validators.required], apellido: ['', Validators.required], fechaNacimiento: [null, Validators.required],
         documento: ['', Validators.required], genero: ['', Validators.required], estadoCivil: [''],
-        fechaPrimeraDialisis: [null], telefonos: [''], emails: ['', Validators.email],
+        fechaPrimeraDialisis: [null], telefonos: [''], emails: this.fb.array([]), // Array para emails
         domicilio: [''], obraSocial: [''], institucion: ['']
       }),
       alergiasTransfusiones: this.fb.group({ // Mapea a 'alergias'
@@ -150,6 +148,12 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
   nuevaAlergia(): FormGroup { return this.fb.group({ descripcion: ['', Validators.required] }); }
   agregarAlergia(): void { this.alergiasArray.push(this.nuevaAlergia()); }
   eliminarAlergia(index: number): void { this.alergiasArray.removeAt(index); }
+
+  // Emails
+  get emailsArray(): FormArray { return this.pacienteForm.get('datosPersonales.emails') as FormArray; }
+  nuevoEmail(): FormGroup { return this.fb.group({ email: ['', [Validators.required, Validators.email]] }); }
+  agregarEmail(): void { this.emailsArray.push(this.nuevoEmail()); }
+  eliminarEmail(index: number): void { this.emailsArray.removeAt(index); }
 
   // Antecedentes
   get antecedentesItems(): FormArray { return this.pacienteForm.get('antecedentesPersonales.items') as FormArray; }
@@ -204,6 +208,7 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
           console.log('Datos COMPLETOS recibidos:', paciente);
           // Limpia FormArrays ANTES de patchValue
           this.alergiasArray.clear();
+          this.emailsArray.clear();
           this.antecedentesItems.clear();
           this.medicacionItems.clear();
           this.historiaItems.clear();
@@ -220,12 +225,16 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
             estadoCivil: paciente.estadoCivil,
             fechaPrimeraDialisis: paciente.fechaPrimeraDialisis ? new Date(paciente.fechaPrimeraDialisis) : null,
             telefonos: paciente.telefonos?.join(', ') || '',
-            emails: paciente.emails?.join(', ') || '',
             domicilio: paciente.domicilio,
             obraSocial: paciente.obraSocial,
             institucion: paciente.institucion
           };
           this.datosPersonalesForm.patchValue(datosPersonales);
+
+          // Emails
+          paciente.emails?.forEach(email => {
+            this.emailsArray.push(this.fb.group({ email: email }));
+          });
 
           // Alergias y Transfusiones
           const alergiasTransfusiones = {
@@ -296,7 +305,7 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
         ...datosSeccion, // nombre, apellido, etc.
         // Convierte arrays si es necesario (ej: si teléfonos/emails fueran FormArray)
         telefonos: datosSeccion.telefonos?.split(',').map((s: string) => s.trim()).filter((s: string) => s) || [],
-        emails: datosSeccion.emails?.split(',').map((s: string) => s.trim()).filter((s: string) => s) || []
+        emails: datosSeccion.emails?.map((item: any) => item.email).filter((email: string) => email) || []
       };
       console.log('Enviando para CREAR paciente:', datosParaCrear);
       guardarObservable = this.pacienteService.crearPaciente(datosParaCrear);
@@ -320,6 +329,7 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
              this.pacienteForm.patchValue(pacienteGuardado);
              // Rellenar FormArrays con datos devueltos (si los hay)
              this.alergiasArray.clear(); pacienteGuardado.alergias?.forEach(item => this.alergiasArray.push(this.fb.group(item)));
+             this.emailsArray.clear(); pacienteGuardado.emails?.forEach(email => this.emailsArray.push(this.fb.group({ email: email })));
              this.antecedentesItems.clear(); pacienteGuardado.antecedentesPersonales?.forEach(item => this.antecedentesItems.push(this.fb.group(item)));
              // ... Rellenar otros ...
              setTimeout(() => { this.router.navigate(['/pacientes', id, 'detalle', 'datos-personales'], { replaceUrl: true }); }, 1000); // Redirige al detalle, sección datos-personales
@@ -356,7 +366,7 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
         return {
           ...datosSeccion,
           telefonos: datosSeccion.telefonos?.split(',').map((s: string) => s.trim()).filter((s: string) => s) || [],
-          emails: datosSeccion.emails?.split(',').map((s: string) => s.trim()).filter((s: string) => s) || []
+          emails: datosSeccion.emails?.map((item: any) => item.email).filter((email: string) => email) || []
         };
       case 'alergiasTransfusiones':
         return {
@@ -374,7 +384,7 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
         };
       case 'historiaClinica':
         return {
-          historiaClinica: datosSeccion.items
+        historiaClinica: datosSeccion.items
         };
       case 'parametrosDialisis':
         // Convertir el FormGroup a Map<String, String>

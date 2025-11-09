@@ -24,7 +24,7 @@ export const routes: Routes = [
     loadChildren: () => import('./pacientes/pacientes-module').then(m => m.PacientesModule)
     // Próximamente: canActivate: [authGuard] // Protegeremos esta sección también
   },
-  // --- FIN NUEVA RUTA ---
+
   {
     path: '',
     redirectTo: 'auth', // Sigue redirigiendo al login si no hay ruta específica

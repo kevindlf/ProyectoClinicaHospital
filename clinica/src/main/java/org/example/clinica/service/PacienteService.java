@@ -22,10 +22,20 @@ public class PacienteService {
         // 1. Guarda el paciente por primera vez para que MongoDB le asigne el ID único.
         Paciente nuevoPaciente = pacienteRepository.save(paciente);
 
-        // 2. El contenido de nuestro QR es el ID del paciente. Lo guardamos en el campo.
-        nuevoPaciente.setQrCodeData(nuevoPaciente.getId());
+        // 2. El contenido de nuestro QR es la URL completa para acceder al paciente. Lo guardamos en el campo.
+        // Usamos localhost para desarrollo local
+        nuevoPaciente.setQrCodeData("http://localhost:4200/pacientes/" + nuevoPaciente.getId() + "/observar");
 
-        // 3. Guarda el paciente por segunda vez para persistir la data del QR.
+        // 3. Genera y envía el QR por email automáticamente (usando los primeros emails configurados)
+        byte[] qrImage = qrService.generateQrCodeImage(nuevoPaciente.getQrCodeData());
+        List<String> emailsParaQr = nuevoPaciente.getEmails();
+        if (emailsParaQr != null && !emailsParaQr.isEmpty()) {
+            // Tomar los primeros 2 emails para envío automático de QR
+            List<String> emailsPrioritarios = emailsParaQr.subList(0, Math.min(2, emailsParaQr.size()));
+            qrService.enviarQrPorEmail(nuevoPaciente.getId(), emailsPrioritarios, qrImage);
+        }
+
+        // 4. Guarda el paciente por segunda vez para persistir la data del QR.
         return pacienteRepository.save(nuevoPaciente);
     }
 
@@ -42,7 +52,14 @@ public class PacienteService {
         Paciente pacienteExistente = pacienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
 
-        // 2. Fusiona los campos no null del pacienteActualizado al pacienteExistente
+        // 2. Verificar si se modificaron los emails para reenviar QR
+        boolean emailsModificados = false;
+        if (pacienteActualizado.getEmails() != null &&
+            !pacienteActualizado.getEmails().equals(pacienteExistente.getEmails())) {
+            emailsModificados = true;
+        }
+
+        // 3. Fusiona los campos no null del pacienteActualizado al pacienteExistente
         // Excluye campos inmutables como id y qrCodeData
         try {
             PropertyDescriptor[] descriptors = BeanUtils.getPropertyDescriptors(Paciente.class);
@@ -66,7 +83,15 @@ public class PacienteService {
             throw new RuntimeException("Error al fusionar propiedades del paciente", e);
         }
 
-        // 3. Guarda y devuelve el paciente fusionado
+        // 4. Si se modificaron los emails, reenviar el QR a los primeros emails
+        if (emailsModificados && pacienteExistente.getEmails() != null &&
+            !pacienteExistente.getEmails().isEmpty()) {
+            byte[] qrImage = qrService.generateQrCodeImage(pacienteExistente.getQrCodeData());
+            List<String> emailsPrioritarios = pacienteExistente.getEmails().subList(0, Math.min(2, pacienteExistente.getEmails().size()));
+            qrService.enviarQrPorEmail(pacienteExistente.getId(), emailsPrioritarios, qrImage);
+        }
+
+        // 5. Guarda y devuelve el paciente fusionado
         return pacienteRepository.save(pacienteExistente);
     }
 

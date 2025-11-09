@@ -47,6 +47,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/pacientes/**").hasAnyRole(Role.ADMIN.name(), Role.MEDICO.name(), Role.ENFERMERO.name(), Role.TECNICO.name())
                         .requestMatchers(HttpMethod.GET, "/api/pacientes").hasAnyRole(Role.ADMIN.name(), Role.MEDICO.name(), Role.ENFERMERO.name(), Role.TECNICO.name())
 
+                        // Permisos de QR (solo lectura para roles autorizados)
+                        .requestMatchers(HttpMethod.GET, "/api/qr/**").hasAnyRole(Role.ADMIN.name(), Role.MEDICO.name(), Role.ENFERMERO.name(), Role.TECNICO.name())
+
                         // Permisos de Usuarios (sin cambios)
                         .requestMatchers("/api/usuarios/**").hasRole(Role.ADMIN.name())
 

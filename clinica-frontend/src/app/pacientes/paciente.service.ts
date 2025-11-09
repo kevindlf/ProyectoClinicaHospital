@@ -17,6 +17,7 @@ export interface Paciente {
   fechaPrimeraDialisis?: string | null;
   telefonos?: string[];
   emails?: string[];
+  emailsPrioritarios?: string[]; // Emails prioritarios para envío de QR
   domicilio?: string;
   obraSocial?: string;
   institucion?: string;

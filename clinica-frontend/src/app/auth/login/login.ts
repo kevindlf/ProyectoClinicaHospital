@@ -74,7 +74,18 @@ export class Login implements OnInit {
         console.log('Login exitoso, token guardado:', token);
         const rol = this.authService.obtenerRolUsuario();
         console.log(`Usuario logueado con rol: ${rol}`);
-        this.redirigirSegunRol(rol); // La redirección DESPUÉS del login sigue funcionando
+
+        // Verificar si venimos de un acceso directo (QR u otro) para redirigir a la URL guardada
+        const returnUrl = localStorage.getItem('returnUrl');
+        if (returnUrl && returnUrl.startsWith('/pacientes/')) {
+          localStorage.removeItem('returnUrl'); // Limpiar la URL de retorno
+          console.log('Redirigiendo a URL de retorno:', returnUrl);
+          this.zone.run(() => {
+            this.router.navigateByUrl(returnUrl);
+          });
+        } else {
+          this.redirigirSegunRol(rol); // Redirección normal según rol
+        }
       },
       error: (error) => {
         console.error('Error DETALLADO en login:', error);

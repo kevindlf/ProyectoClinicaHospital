@@ -18,7 +18,34 @@
           <mat-form-field appearance="outline"> <mat-label>Estado Civil</mat-label> <input matInput formControlName="estadoCivil"> </mat-form-field>
           <mat-form-field appearance="outline"> <mat-label>Fecha Primera Diálisis</mat-label> <input matInput [matDatepicker]="pickerDialisis" formControlName="fechaPrimeraDialisis" readonly> <mat-datepicker-toggle matSuffix [for]="pickerDialisis"></mat-datepicker-toggle> <mat-datepicker #pickerDialisis></mat-datepicker> </mat-form-field>
           <mat-form-field appearance="outline"> <mat-label>Teléfonos</mat-label> <input matInput formControlName="telefonos" placeholder="Separados por coma"> </mat-form-field>
-          <mat-form-field appearance="outline"> <mat-label>Emails</mat-label> <input matInput type="email" formControlName="emails" placeholder="Separados por coma"> @if(datosPersonalesForm.get('emails')?.invalid && datosPersonalesForm.get('emails')?.touched){ <mat-error>Email inválido</mat-error> } </mat-form-field>
+
+          <!-- Campo de Emails Múltiples -->
+          <div style="grid-column: 1 / -1;">
+            <h4 style="color: #1976d2; margin-bottom: 10px;">Emails Electrónicos</h4>
+            <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
+              Agregue los emails del paciente. Los primeros serán usados para envío automático de QR.
+            </p>
+            <div formArrayName="emails">
+              @for (emailGroup of emailsArray.controls; track $index) {
+                <div [formGroupName]="$index" style="display: flex; align-items: center; margin-bottom: 10px; background-color: #f5f5f5; padding: 10px; border-radius: 4px;">
+                  <mat-form-field appearance="outline" style="flex-grow: 1; margin-right: 10px;">
+                    <mat-label>Email {{ $index + 1 }}</mat-label>
+                    <input matInput type="email" formControlName="email" required>
+                    @if (emailGroup.get('email')?.invalid && emailGroup.get('email')?.touched) {
+                      <mat-error>Email inválido</mat-error>
+                    }
+                  </mat-form-field>
+                  <button mat-icon-button color="warn" type="button" (click)="eliminarEmail($index)" aria-label="Eliminar email">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+              <button mat-stroked-button color="primary" type="button" (click)="agregarEmail()">
+                <mat-icon>add</mat-icon> Agregar Email
+              </button>
+            </div>
+          </div>
+
           <mat-form-field appearance="outline"> <mat-label>Domicilio</mat-label> <input matInput formControlName="domicilio"> </mat-form-field>
           <mat-form-field appearance="outline"> <mat-label>Obra Social</mat-label> <input matInput formControlName="obraSocial"> </mat-form-field>
           <mat-form-field appearance="outline"> <mat-label>Institución</mat-label> <input matInput formControlName="institucion"> </mat-form-field>
@@ -269,7 +296,7 @@
                <mat-form-field appearance="outline" style="width: 100%;"><input matInput formControlName="hierro"></mat-form-field>
              </div>
           </div>
-          
+
       </div>
     }
 

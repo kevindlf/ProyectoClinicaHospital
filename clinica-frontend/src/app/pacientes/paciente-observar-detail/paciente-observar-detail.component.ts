@@ -55,4 +55,13 @@ export class PacienteObservarDetailComponent implements OnInit {
   volver(): void {
     this.router.navigate(['/pacientes/observar']);
   }
+
+  descargarQr(): void {
+    if (this.pacienteId) {
+      const link = document.createElement('a');
+      link.href = `http://localhost:8080/api/qr/${this.pacienteId}`;
+      link.download = `qr-paciente-${this.pacienteId}.png`;
+      link.click();
+    }
+  }
 }
