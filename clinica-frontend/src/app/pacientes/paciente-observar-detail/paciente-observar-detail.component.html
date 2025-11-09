@@ -1,5 +1,7 @@
 <div class="observar-detail-container">
-
+            <button mat-stroked-button (click)="volver()" style="margin-bottom: 10px;">
+              <mat-icon>arrow_back</mat-icon> Volver a la Lista de Pacientes
+            </button>
   @if (errorCarga) {
     <div style="padding: 0 20px;">
       <mat-card class="mat-error-card" style="background-color: #fdecea; color: #a04446; padding: 15px;">
@@ -41,15 +43,12 @@
               <mat-icon matListItemIcon>assessment</mat-icon>
               <span matListItemTitle>Evolución Mensual</span>
             </a>
-            <a mat-list-item [class.active-link]="seccionActiva === 'qr'" (click)="cambiarSeccion('qr')">
-              <mat-icon matListItemIcon>qr_code</mat-icon>
-              <span matListItemTitle>Código QR</span>
-            </a>
             </mat-nav-list>
         </mat-sidenav>
 
         <mat-sidenav-content class="content-panel" style="background-color: white;">
           <div style="padding: 20px 20px 0 20px;">
+           
              <h2 style="margin: 0;">{{ paciente.nombre }} {{ paciente.apellido }}</h2>
              <p style="color: grey; margin-top: 5px;">ID: {{ paciente.id }} | Documento: {{ paciente.documento }}</p>
              <mat-divider style="margin-top: 15px;"></mat-divider>
@@ -119,7 +118,21 @@
                 <h3>Historia Clínica</h3>
                 <div *ngIf="paciente.historiaClinica && paciente.historiaClinica.length > 0">
                   <div *ngFor="let historia of paciente.historiaClinica" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-                    <strong>{{ historia.fecha }}:</strong> {{ historia.detalle }}
+                    <div class="datos-grid">
+                      <div><strong>Fecha:</strong> {{ historia.fecha }}</div>
+                      <div *ngIf="historia.profesional"><strong>Profesional:</strong> {{ historia.profesional }}</div>
+                      <div *ngIf="historia.grupoSanguineo"><strong>Grupo Sanguíneo:</strong> {{ historia.grupoSanguineo }}</div>
+                      <div *ngIf="historia.peso"><strong>Peso:</strong> {{ historia.peso }} kg</div>
+                      <div *ngIf="historia.pesoSeco"><strong>Peso Seco:</strong> {{ historia.pesoSeco }} kg</div>
+                      <div *ngIf="historia.altura"><strong>Altura:</strong> {{ historia.altura }} cm</div>
+                      <div *ngIf="historia.fechaPrimeraDialisisVida"><strong>Fecha Primera Diálisis Vida:</strong> {{ historia.fechaPrimeraDialisisVida }}</div>
+                      <div *ngIf="historia.fechaPrimeraDialisisClinica"><strong>Fecha Primera Diálisis Clínica:</strong> {{ historia.fechaPrimeraDialisisClinica }}</div>
+                      <div *ngIf="historia.heparina"><strong>Heparina:</strong> {{ historia.heparina }}</div>
+                      <div *ngIf="historia.antecedentesEnfermedad"><strong>Antecedentes Enfermedad:</strong> {{ historia.antecedentesEnfermedad }}</div>
+                      <div *ngIf="historia.medicacionPrescritaDialisis"><strong>Medicación Prescrita Diálisis:</strong> {{ historia.medicacionPrescritaDialisis }}</div>
+                      <div *ngIf="historia.medicacionDomiciliaria"><strong>Medicación Domiciliaria:</strong> {{ historia.medicacionDomiciliaria }}</div>
+                      <div *ngIf="historia.detalle"><strong>Detalle:</strong> {{ historia.detalle }}</div>
+                    </div>
                   </div>
                 </div>
                 <div *ngIf="!paciente.historiaClinica || paciente.historiaClinica.length === 0">
@@ -155,24 +168,7 @@
                   No hay evolución mensual registrada
                 </div>
               </div>
-            } @else if (seccionActiva === 'qr') {
-              <div class="seccion-content">
-                <h3>Código QR del Paciente</h3>
-                <p>El código QR permite el acceso seguro a la información del paciente.</p>
-                <div style="text-align: center; margin: 20px 0;">
-                  <img [src]="'http://localhost:8080/api/qr/' + paciente.id" alt="Código QR" style="max-width: 200px; border: 1px solid #ccc; padding: 10px;">
-                </div>
-                <div style="text-align: center;">
-                  <button mat-raised-button color="primary" (click)="descargarQr()">
-                    <mat-icon>download</mat-icon> Descargar QR
-                  </button>
-                </div>
-                <p style="font-size: 14px; color: #666; margin-top: 20px;">
-                  <strong>Nota:</strong> El QR se genera automáticamente al crear el paciente y se envía a los emails prioritarios configurados.
-                  Si se modifican los emails prioritarios, el QR se reenviará automáticamente.
-                </p>
-              </div>
-            }
+            } 
           </div>
 
         </mat-sidenav-content>

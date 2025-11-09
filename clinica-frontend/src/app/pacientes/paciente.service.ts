@@ -33,7 +33,21 @@ export interface Paciente {
 export interface Alergia { descripcion: string; }
 export interface Antecedente { nombre: string; detalle: string; }
 export interface Medicacion { nombre: string; dosis: string; }
-export interface Historial { fecha: string; detalle: string; }
+export interface Historial {
+  fecha: string;
+  profesional?: string;
+  grupoSanguineo?: string;
+  peso?: string;
+  pesoSeco?: string;
+  altura?: string;
+  fechaPrimeraDialisisVida?: string;
+  fechaPrimeraDialisisClinica?: string;
+  heparina?: string;
+  antecedentesEnfermedad?: string;
+  medicacionPrescritaDialisis?: string;
+  medicacionDomiciliaria?: string;
+  detalle?: string;
+}
 export interface Evolucion { mes: string; detalle: string; }
 // --- FIN INTERFACES ---
 

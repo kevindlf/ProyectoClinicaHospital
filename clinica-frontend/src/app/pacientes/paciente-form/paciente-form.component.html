@@ -18,7 +18,9 @@
           <mat-form-field appearance="outline"> <mat-label>Estado Civil</mat-label> <input matInput formControlName="estadoCivil"> </mat-form-field>
           <mat-form-field appearance="outline"> <mat-label>Fecha Primera Diálisis</mat-label> <input matInput [matDatepicker]="pickerDialisis" formControlName="fechaPrimeraDialisis" readonly> <mat-datepicker-toggle matSuffix [for]="pickerDialisis"></mat-datepicker-toggle> <mat-datepicker #pickerDialisis></mat-datepicker> </mat-form-field>
           <mat-form-field appearance="outline"> <mat-label>Teléfonos</mat-label> <input matInput formControlName="telefonos" placeholder="Separados por coma"> </mat-form-field>
-
+          <mat-form-field appearance="outline"> <mat-label>Domicilio</mat-label> <input matInput formControlName="domicilio"> </mat-form-field>
+          <mat-form-field appearance="outline"> <mat-label>Obra Social</mat-label> <input matInput formControlName="obraSocial"> </mat-form-field>
+          <mat-form-field appearance="outline"> <mat-label>Institución</mat-label> <input matInput formControlName="institucion"> </mat-form-field>
           <!-- Campo de Emails Múltiples -->
           <div style="grid-column: 1 / -1;">
             <h4 style="color: #1976d2; margin-bottom: 10px;">Emails Electrónicos</h4>
@@ -45,10 +47,6 @@
               </button>
             </div>
           </div>
-
-          <mat-form-field appearance="outline"> <mat-label>Domicilio</mat-label> <input matInput formControlName="domicilio"> </mat-form-field>
-          <mat-form-field appearance="outline"> <mat-label>Obra Social</mat-label> <input matInput formControlName="obraSocial"> </mat-form-field>
-          <mat-form-field appearance="outline"> <mat-label>Institución</mat-label> <input matInput formControlName="institucion"> </mat-form-field>
         </div>
       </div>
     }
