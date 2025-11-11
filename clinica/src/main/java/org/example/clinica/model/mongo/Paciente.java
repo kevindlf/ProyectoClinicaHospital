@@ -36,6 +36,7 @@ public class Paciente {
     // Alergias y transfusiones
     private List<Alergia> alergias;
     private boolean testigoJehova;
+
     private boolean seTransfunde;
 
     // Antecedentes

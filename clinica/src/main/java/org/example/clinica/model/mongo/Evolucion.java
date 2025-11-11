@@ -6,6 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Evolucion {
-    private String mes;
-    private String detalle;
+    private String fecha;
+    private String profesional;
+    private String informeGeneral;
 }

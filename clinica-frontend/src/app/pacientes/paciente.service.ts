@@ -48,7 +48,7 @@ export interface Historial {
   medicacionDomiciliaria?: string;
   detalle?: string;
 }
-export interface Evolucion { mes: string; detalle: string; }
+export interface Evolucion { fecha: string; profesional: string; informeGeneral: string; }
 // --- FIN INTERFACES ---
 
 @Injectable({

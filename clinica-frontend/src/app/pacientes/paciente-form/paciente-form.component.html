@@ -304,29 +304,23 @@
         <div formArrayName="items">
           @for (evolucionGroup of evolucionItems.controls; track $index) {
             <div [formGroupName]="$index" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 8px; background-color: #fafafa;">
-              <div style="display: grid; grid-template-columns: 1fr 3fr; gap: 15px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 15px;">
                 <mat-form-field appearance="outline">
-                  <mat-label>Mes</mat-label>
-                  <mat-select formControlName="mes" required>
-                    <mat-option value="Enero">Enero</mat-option>
-                    <mat-option value="Febrero">Febrero</mat-option>
-                    <mat-option value="Marzo">Marzo</mat-option>
-                    <mat-option value="Abril">Abril</mat-option>
-                    <mat-option value="Mayo">Mayo</mat-option>
-                    <mat-option value="Junio">Junio</mat-option>
-                    <mat-option value="Julio">Julio</mat-option>
-                    <mat-option value="Agosto">Agosto</mat-option>
-                    <mat-option value="Septiembre">Septiembre</mat-option>
-                    <mat-option value="Octubre">Octubre</mat-option>
-                    <mat-option value="Noviembre">Noviembre</mat-option>
-                    <mat-option value="Diciembre">Diciembre</mat-option>
-                  </mat-select>
-                  @if (evolucionGroup.get('mes')?.invalid && evolucionGroup.get('mes')?.touched) { <mat-error>Requerido</mat-error> }
+                  <mat-label>Fecha</mat-label>
+                  <input matInput [matDatepicker]="pickerEvolucion" formControlName="fecha" required readonly>
+                  <mat-datepicker-toggle matSuffix [for]="pickerEvolucion"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerEvolucion></mat-datepicker>
+                  @if (evolucionGroup.get('fecha')?.invalid && evolucionGroup.get('fecha')?.touched) { <mat-error>Requerido</mat-error> }
                 </mat-form-field>
                 <mat-form-field appearance="outline">
-                  <mat-label>Detalle</mat-label>
-                  <textarea matInput formControlName="detalle" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="3" cdkAutosizeMaxRows="10" required></textarea>
-                  @if (evolucionGroup.get('detalle')?.invalid && evolucionGroup.get('detalle')?.touched) { <mat-error>Requerido</mat-error> }
+                  <mat-label>Profesional</mat-label>
+                  <input matInput formControlName="profesional" required readonly>
+                  @if (evolucionGroup.get('profesional')?.invalid && evolucionGroup.get('profesional')?.touched) { <mat-error>Requerido</mat-error> }
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Informe General</mat-label>
+                  <textarea matInput formControlName="informeGeneral" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="3" cdkAutosizeMaxRows="10" required></textarea>
+                  @if (evolucionGroup.get('informeGeneral')?.invalid && evolucionGroup.get('informeGeneral')?.touched) { <mat-error>Requerido</mat-error> }
                 </mat-form-field>
               </div>
               <div style="margin-top: 15px; display: flex; justify-content: space-between;">

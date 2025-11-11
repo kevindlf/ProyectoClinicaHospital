@@ -158,9 +158,10 @@
                 <h3>Evolución Mensual</h3>
                 <div *ngIf="paciente.evolucionMensual && paciente.evolucionMensual.length > 0">
                   <div *ngFor="let evolucion of paciente.evolucionMensual" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-                    <strong>{{ evolucion.mes }}:</strong>
+                    <strong>{{ evolucion.fecha | date:'dd/MM/yyyy' }}:</strong>
                     <div style="margin-left: 20px;">
-                      {{ evolucion.detalle }}
+                      <p><strong>Profesional:</strong> {{ evolucion.profesional }}</p>
+                      <p><strong>Informe General:</strong> {{ evolucion.informeGeneral }}</p>
                     </div>
                   </div>
                 </div>
@@ -168,7 +169,7 @@
                   No hay evolución mensual registrada
                 </div>
               </div>
-            } 
+            }
           </div>
 
         </mat-sidenav-content>

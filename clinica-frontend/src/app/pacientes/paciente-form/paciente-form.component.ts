@@ -121,8 +121,8 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
       }),
       alergiasTransfusiones: this.fb.group({ // Mapea a 'alergias'
         alergias: this.fb.array([]), // Array de FormGroups { descripcion: string }
-        testigoJehova: [false],
-        seTransfunde: [true] // O null/false por defecto?
+        testigoJehova: ['false'],
+        seTransfunde: ['true'] // Valores por defecto como strings para mat-select
       }),
       antecedentesPersonales: this.fb.group({ // Mapea a 'antecedentes'
           items: this.fb.array([]) // Array de FormGroups { nombre: string, detalle: string }
@@ -193,7 +193,14 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
 
    // Evolucion Mensual
   get evolucionItems(): FormArray { return this.pacienteForm.get('evolucionMensual.items') as FormArray; }
-  nuevaEvolucion(): FormGroup { return this.fb.group({ mes: ['', Validators.required], detalle: ['', Validators.required] }); } // O mes actual por defecto
+  nuevaEvolucion(): FormGroup {
+    const profesional = this.authService.obtenerNombreUsuario() || '';
+    return this.fb.group({
+      fecha: [new Date(), Validators.required],
+      profesional: [profesional, Validators.required],
+      informeGeneral: ['', Validators.required]
+    });
+  }
   agregarEvolucion(): void { this.evolucionItems.push(this.nuevaEvolucion()); }
   eliminarEvolucion(index: number): void { this.evolucionItems.removeAt(index); }
   // --- Fin Métodos FormArray ---
@@ -238,8 +245,8 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
 
           // Alergias y Transfusiones
           const alergiasTransfusiones = {
-            testigoJehova: paciente.testigoJehova,
-            seTransfunde: paciente.seTransfunde
+            testigoJehova: paciente.testigoJehova?.toString() || 'false',
+            seTransfunde: paciente.seTransfunde?.toString() || 'true'
           };
           this.alergiasTransfusionesForm.patchValue(alergiasTransfusiones);
           paciente.alergias?.forEach(item => this.alergiasArray.push(this.fb.group(item)));
@@ -371,8 +378,8 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
       case 'alergiasTransfusiones':
         return {
           alergias: datosSeccion.alergias,
-          testigoJehova: datosSeccion.testigoJehova,
-          seTransfunde: datosSeccion.seTransfunde
+          testigoJehova: datosSeccion.testigoJehova === 'true',
+          seTransfunde: datosSeccion.seTransfunde === 'true'
         };
       case 'antecedentesPersonales':
         return {
