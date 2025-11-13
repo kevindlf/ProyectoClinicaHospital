@@ -1,4 +1,220 @@
-/* You can add global styles to this file, and also import other style files */
+/* =========================================================
+   🏥 ESTILOS GENERALES - CLÍNICA ONLINE
+   Autor: Kevin De La Fuente
+   Versión optimizada y armonizada visualmente.
+   ========================================================= */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* ---------------------------------------------------------
+   1. CONFIGURACIÓN GLOBAL Y RESETEO
+   --------------------------------------------------------- */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', 'Roboto', sans-serif;
+  color: var(--neutral-dark);
+  background: var(--background-gradient);
+  background-attachment: fixed;
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------
+   2. PALETA DE COLORES
+   --------------------------------------------------------- */
+:root {
+  --primary: #4da6ff;           /* Azul profesional */
+  --primary-dark: #357edd;
+  --primary-light: #e8f3ff;
+
+  --secondary: #00bfa6;         /* Verde agua (salud y bienestar) */
+  --secondary-light: #a7ffeb;
+
+  --neutral-light: #f9fafc;
+  --neutral-medium: #dce3ec;
+  --neutral-dark: #2c3e50;
+
+  --success: #27ae60;
+  --warning: #f39c12;
+  --error: #e74c3c;
+
+  --background-gradient: linear-gradient(135deg, #80c4fc 0%, #ffffff 100%);
+  
+}
+
+/* ---------------------------------------------------------
+   3. TIPOGRAFÍA Y TEXTOS
+   --------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--neutral-dark);
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--primary-dark);
+}
+
+h2 {
+  font-size: 2rem;
+  text-align: center;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #34495e;
+  margin-bottom: 1rem;
+}
+
+/* ---------------------------------------------------------
+   4. CONTENEDORES Y ESTRUCTURA
+   --------------------------------------------------------- */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.centered-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+/* ---------------------------------------------------------
+   5. TARJETAS (CARDS)
+   --------------------------------------------------------- */
+.mat-mdc-card {
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  background: #ffffffcc; /* Blanco translúcido */
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--neutral-medium);
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.mat-mdc-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+}
+
+/* ---------------------------------------------------------
+   6. BOTONES
+   --------------------------------------------------------- */
+.mat-mdc-raised-button {
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 0.8rem 1.8rem;
+  text-transform: none;
+  transition: all 0.3s ease;
+}
+
+.mat-mdc-raised-button[color="primary"] {
+  background-color: var(--primary);
+  color: #fff;
+}
+
+.mat-mdc-raised-button[color="primary"]:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.mat-mdc-raised-button[color="accent"] {
+  background-color: var(--secondary);
+  color: #fff;
+}
+
+.mat-mdc-raised-button[color="accent"]:hover {
+  background-color: #02d1b6;
+  transform: translateY(-2px);
+}
+
+/* Botón de cierre de sesión u otros secundarios */
+button[color="warn"] {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+button[color="warn"]:hover {
+  background-color: #c0392b;
+}
+
+/* ---------------------------------------------------------
+   7. FORMULARIOS
+   --------------------------------------------------------- */
+.mat-mdc-form-field {
+  width: 100%;
+  margin-bottom: 1.2rem;
+}
+
+input, select, textarea {
+  border-radius: 10px !important;
+  transition: all 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 5px rgba(77, 166, 255, 0.3);
+  outline: none;
+}
+
+/* ---------------------------------------------------------
+   8. EFECTOS Y UTILIDADES
+   --------------------------------------------------------- */
+.shadow-soft {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+}
+
+.bg-white {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid var(--neutral-medium);
+  padding: 1.5rem;
+}
+
+/* Feedback de éxito y error */
+.text-success {
+  color: var(--success);
+}
+
+.text-error {
+  color: var(--error);
+}
+
+/* ---------------------------------------------------------
+   9. RESPONSIVE
+   --------------------------------------------------------- */
+@media (max-width: 992px) {
+  h1 { font-size: 2.2rem; }
+  h2 { font-size: 1.7rem; }
+}
+
+@media (max-width: 768px) {
+  .mat-mdc-card {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .mat-mdc-raised-button {
+    width: 100%;
+    margin-bottom: 0.75rem;
+  }
+
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.4rem; }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.25rem; }
+}

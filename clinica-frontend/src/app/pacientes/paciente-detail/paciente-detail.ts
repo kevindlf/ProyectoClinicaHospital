@@ -1,6 +1,6 @@
 // src/app/pacientes/paciente-detail/paciente-detail.ts
 
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 // Importamos RouterLink y RouterOutlet
 import { ActivatedRoute, Router, RouterOutlet, RouterLink } from '@angular/router'; // <<< Ya están aquí
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,7 @@ import { MaterialModule } from '../../material/material-module';
 import { PacienteService, Paciente } from '../paciente.service';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-paciente-detail',
@@ -23,6 +24,7 @@ export class PacienteDetailComponent implements OnInit {
   errorCarga: string | null = null;
   pacienteId: string | null = null;
   objectKeys = Object.keys; // Mantenemos para 'Parámetros Diálisis'
+  window: any = window; // Declaramos window para acceder en el template
 
   constructor(
     private route: ActivatedRoute,
@@ -53,5 +55,25 @@ export class PacienteDetailComponent implements OnInit {
 
   volver(): void {
     this.router.navigate(['/dashboard']);
+  }
+
+isMobile: boolean = window.innerWidth < 1024;
+  @HostListener('window:resize')
+onResize() {
+  this.isMobile = window.innerWidth < 1024;
+}
+
+  @ViewChild('sidenav') sidenav!: MatSidenav;
+
+  abrirSidenav() {
+    this.sidenav.open();
+  }
+
+  cerrarSidenav() {
+    this.sidenav.close();
+  }
+
+  toggleSidenav() {
+    this.sidenav.toggle();
   }
 }

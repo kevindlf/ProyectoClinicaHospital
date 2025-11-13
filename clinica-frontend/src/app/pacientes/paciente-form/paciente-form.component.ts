@@ -342,10 +342,21 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
              setTimeout(() => { this.router.navigate(['/pacientes', id, 'detalle', 'datos-personales'], { replaceUrl: true }); }, 1000); // Redirige al detalle, sección datos-personales
 
          } else {
-             this.mensajeExito = `Sección guardada.`;
+             // Mensaje específico por sección
+             const mensajesExito: { [key: string]: string } = {
+               'datosPersonales': 'Datos personales guardados correctamente.',
+               'alergiasTransfusiones': 'Datos de alergias y transfusiones guardados correctamente.',
+               'antecedentesPersonales': 'Antecedentes personales guardados correctamente.',
+               'medicacionActual': 'Medicación actual guardada correctamente.',
+               'historiaClinica': 'Historia clínica guardada correctamente.',
+               'parametrosDialisis': 'Parámetros de diálisis guardados correctamente.',
+               'evolucionMensual': 'Evolución mensual guardada correctamente.'
+             };
+             this.mensajeExito = mensajesExito[formGroupName!] || 'Sección guardada.';
              // Actualiza TODO el formulario con los datos devueltos
              this.pacienteForm.patchValue(pacienteGuardado);
               // Rellenar FormArrays con datos devueltos...
+             this.rellenarFormArraysConDatosGuardados(pacienteGuardado);
              formToValidate!.markAsPristine();
              setTimeout(() => this.mensajeExito = null, 3000);
          }
@@ -364,6 +375,28 @@ export class PacienteFormComponent implements OnInit, OnDestroy {
          control.updateValueAndValidity({ onlySelf: true });
        }
      });
+  }
+
+  // Método para rellenar FormArrays con datos guardados
+  private rellenarFormArraysConDatosGuardados(paciente: Paciente): void {
+    // Limpiar y rellenar FormArrays con datos actualizados
+    this.alergiasArray.clear();
+    paciente.alergias?.forEach(item => this.alergiasArray.push(this.fb.group(item)));
+
+    this.emailsArray.clear();
+    paciente.emails?.forEach(email => this.emailsArray.push(this.fb.group({ email: email })));
+
+    this.antecedentesItems.clear();
+    paciente.antecedentesPersonales?.forEach(item => this.antecedentesItems.push(this.fb.group(item)));
+
+    this.medicacionItems.clear();
+    paciente.medicacionActual?.forEach(item => this.medicacionItems.push(this.fb.group(item)));
+
+    this.historiaItems.clear();
+    paciente.historiaClinica?.forEach(item => this.historiaItems.push(this.fb.group(item)));
+
+    this.evolucionItems.clear();
+    paciente.evolucionMensual?.forEach(item => this.evolucionItems.push(this.fb.group(item)));
   }
 
   // Método para mapear datos del formulario al formato esperado por el backend

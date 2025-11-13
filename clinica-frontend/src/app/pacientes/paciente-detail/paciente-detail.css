@@ -1,29 +1,251 @@
-/* src/app/pacientes/paciente-detail/paciente-detail.css */
+/* =========================================================
+   🩺 DETALLE PACIENTE - ESTILO PROFESIONAL AZUL MODERNO
+   ========================================================= */
 
+/* Fondo general con degradado */
 .detail-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #7fb3ff 0%, #a8c7ff 50%, #d0e0ff 100%);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  font-family: 'Poppins', 'Roboto', sans-serif;
   height: 100%;
 }
 
+/* Botón volver */
+.back-button {
+  align-self: flex-start;
+  margin: 0.5rem 0 1rem 0.5rem;
+  color: #2563eb;
+  border-color: #2563eb;
+  transition: all 0.25s ease;
+}
+
+.back-button:hover {
+  background-color: #2563eb;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Tarjeta de error */
+.error-card mat-card {
+  background: #fdecea;
+  color: #a04446;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(160, 68, 70, 0.2);
+  margin: 0 1rem 1rem 1rem;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Contenedor principal */
 .sidenav-container {
-  height: calc(100vh - 80px); /* Ajusta según sea necesario */
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 64px);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.6s ease-in-out;
 }
 
-/* Estilo para el enlace activo en la lista */
+/* Panel lateral */
+.sidenav-panel {
+  width: 250px;
+  background: rgba(255, 255, 255, 0.98);
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Header del sidenav */
+.sidenav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.sidenav-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.toggle-btn {
+  color: #2563eb;
+  transition: transform 0.2s ease;
+}
+
+.toggle-btn:hover {
+  transform: rotate(90deg);
+}
+
+/* Links del sidenav */
+mat-nav-list a {
+  border-radius: 8px;
+  margin: 4px 8px;
+  transition: background-color 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+}
+
+mat-nav-list a:hover {
+  background-color: rgba(37, 99, 235, 0.1);
+  transform: translateX(4px);
+}
+
 .active-link {
-  background-color: rgba(63, 81, 181, 0.1); /* Color suave */
-  color: #3f51b5; /* Color primario */
+  background-color: rgba(37, 99, 235, 0.15);
+  color: #1e40af;
+  border-left: 4px solid #2563eb;
+  font-weight: 600;
+}
+
+/* Íconos */
+.mat-mdc-list-item mat-icon {
+  font-size: 22px;
+  vertical-align: middle;
+  margin-right: 8px;
+  position: relative;
+  top: 2px;
+}
+
+/* Contenido principal */
+.content-panel {
+  background: #ffffff;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Header del paciente */
+.patient-header {
+  padding: 1.5rem 2rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.patient-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.patient-header p {
+  color: #6b7280;
+  margin-top: 0.4rem;
+  font-size: 0.95rem;
+}
+
+/* Contenido dinámico */
+.patient-content {
+  padding: 1.5rem 2rem;
+  background-color: #ffffff;
+}
+
+/* Header visible en móvil */
+.sidenav-mobile-header {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  background-color: #f1f5ff;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.sidenav-mobile-header h3 {
+  font-size: 1.1rem;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+/* Botón para abrir sidenav en desktop */
+.sidenav-desktop-toggle {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.sidenav-desktop-toggle button {
+  color: #2563eb;
+}
+
+.sidenav-desktop-toggle:hover {
+  transform: scale(1.1);
+}
+
+/* Texto de carga o sin datos */
+.loading,
+.no-data {
+  text-align: center;
+  color: #1e3a8a;
   font-weight: 500;
-}
-.active-link mat-icon {
-    color: #3f51b5;
-}
-
-mat-nav-list a mat-icon {
-  margin-right: 16px;
-  color: rgba(0,0,0,.54);
+  font-size: 1.1rem;
+  padding: 3rem;
+  animation: fadeIn 0.6s ease-in-out;
 }
 
-mat-divider { /* Asegúrate de importar MatDividerModule si no está */
-    margin: 15px 0;
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsivo */
+@media (max-width: 1024px) {
+  .sidenav-mobile-header {
+    display: flex;
+  }
+
+  .sidenav-panel {
+    width: 240px;
+  }
+
+  .sidenav-container {
+    flex-direction: column;
+  }
+
+  .patient-header h2 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidenav-panel {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .sidenav-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .patient-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .patient-content {
+    padding: 1rem;
+  }
 }

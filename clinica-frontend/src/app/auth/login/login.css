@@ -1,33 +1,137 @@
-/* src/app/auth/login/login.component.css (o .scss) */
+/* =========================================================
+   🎯 LOGIN - CLÍNICA ONLINE (Versión compacta y moderna unificada)
+   ========================================================= */
 
+/* Contenedor principal */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 90vh; /* Ocupa casi toda la altura */
+  min-height: 100vh;
+  background: linear-gradient(135deg, #bfdcff 0%, #dceeff 50%, #f5faff 100%);
+  background-attachment: fixed;
+  padding: 2rem;
 }
 
+/* Tarjeta principal */
 mat-card {
   width: 100%;
-  max-width: 400px; /* Ancho máximo del formulario */
+  max-width: 420px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  border: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeIn 0.7s ease-in-out;
 }
 
+mat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+/* Título y subtítulo */
+mat-card-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-dark, #2b6cb0);
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+mat-card-subtitle {
+  text-align: center;
+  color: #5f6b7a;
+  font-size: 1rem;
+}
+
+/* Formulario */
 .login-form {
   display: flex;
-  flex-direction: column; /* Un campo debajo del otro */
+  flex-direction: column;
+  gap: 0.45rem; /* 🔹 Menos separación como en el crear usuario */
+  padding: 1rem 1.2rem 1.5rem;
 }
 
+/* Campos */
 mat-form-field {
   width: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
 }
 
+/* Botón de enviar */
 .login-button {
-  width: 100%; /* El botón ocupa todo el ancho */
+  width: 100%;
+  font-weight: 600;
+  padding: 0.8rem;
+  border-radius: 10px;
+  background-color: var(--primary, #3b82f6);
+  color: #fff;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+.login-button:hover:not(:disabled) {
+  background-color: var(--primary-dark, #2563eb);
+  transform: translateY(-2px);
+}
+
+.login-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Enlace de registro */
 .link-registro {
   display: block;
   text-align: center;
-  margin-top: 16px;
+  color: var(--secondary, #2563eb);
   text-decoration: none;
+  margin-top: 0.8rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.link-registro:hover {
+  color: var(--secondary-light, #60a5fa);
+}
+
+/* Error */
+mat-error {
+  font-size: 0.9rem;
+  color: #b91c1c;
+}
+
+/* Animación */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  mat-card {
+    max-width: 90%;
+  }
+
+  mat-card-title {
+    font-size: 1.5rem;
+  }
+
+  .login-form {
+    gap: 0.6rem;
+  }
+
+  .login-button {
+    font-size: 0.95rem;
+  }
 }

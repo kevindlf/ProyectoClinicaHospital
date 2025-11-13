@@ -1,14 +1,14 @@
-<div style="padding: 20px; max-width: 600px; margin: auto;">
-  <mat-card>
-    <mat-card-header>
+<div class="form-wrapper">
+  <mat-card class="form-card">
+    <mat-card-header class="form-header">
       <mat-card-title>Crear Nuevo Usuario</mat-card-title>
       <mat-card-subtitle>Ingrese los datos del médico o enfermero/técnico</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
-      <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()" class="form-content">
 
-        <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Nombre</mat-label>
           <input matInput formControlName="nombre" required>
           @if (usuarioForm.get('nombre')?.invalid && usuarioForm.get('nombre')?.touched) {
@@ -16,66 +16,66 @@
           }
         </mat-form-field>
 
-        <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Apellido</mat-label>
           <input matInput formControlName="apellido" required>
-           @if (usuarioForm.get('apellido')?.invalid && usuarioForm.get('apellido')?.touched) {
+          @if (usuarioForm.get('apellido')?.invalid && usuarioForm.get('apellido')?.touched) {
             <mat-error>El apellido es requerido.</mat-error>
           }
         </mat-form-field>
 
-        <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email</mat-label>
           <input matInput type="email" formControlName="email" required>
-           @if (usuarioForm.get('email')?.invalid && usuarioForm.get('email')?.touched) {
+          @if (usuarioForm.get('email')?.invalid && usuarioForm.get('email')?.touched) {
             <mat-error>
-               @if (usuarioForm.get('email')?.errors?.['required']) {
+              @if (usuarioForm.get('email')?.errors?.['required']) {
                 El email es requerido.
               }
-               @if (usuarioForm.get('email')?.errors?.['email']) {
+              @if (usuarioForm.get('email')?.errors?.['email']) {
                 Ingrese un email válido.
               }
             </mat-error>
           }
         </mat-form-field>
 
-        <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Contraseña Inicial</mat-label>
           <input matInput type="password" formControlName="password" required>
-           @if (usuarioForm.get('password')?.invalid && usuarioForm.get('password')?.touched) {
+          @if (usuarioForm.get('password')?.invalid && usuarioForm.get('password')?.touched) {
             <mat-error>
-               @if (usuarioForm.get('password')?.errors?.['required']) {
+              @if (usuarioForm.get('password')?.errors?.['required']) {
                 La contraseña es requerida.
               }
-               @if (usuarioForm.get('password')?.errors?.['minlength']) {
+              @if (usuarioForm.get('password')?.errors?.['minlength']) {
                 Debe tener al menos 6 caracteres.
               }
             </mat-error>
           }
         </mat-form-field>
 
-        <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Rol</mat-label>
           <mat-select formControlName="rol" required>
-            @for(rol of rolesDisponibles; track rol) {
+            @for (rol of rolesDisponibles; track rol) {
               <mat-option [value]="rol">{{ rol }}</mat-option>
             }
           </mat-select>
-           @if (usuarioForm.get('rol')?.invalid && usuarioForm.get('rol')?.touched) {
+          @if (usuarioForm.get('rol')?.invalid && usuarioForm.get('rol')?.touched) {
             <mat-error>Debe seleccionar un rol.</mat-error>
           }
         </mat-form-field>
 
         @if (mensajeExito) {
-          <p style="color: green; text-align: center; margin-top: 10px;">{{ mensajeExito }}</p>
+          <p class="mensaje-exito">{{ mensajeExito }}</p>
         }
         @if (mensajeError) {
-          <p style="color: red; text-align: center; margin-top: 10px;">{{ mensajeError }}</p>
+          <p class="mensaje-error">{{ mensajeError }}</p>
         }
 
-
-        <mat-card-actions align="end">
-          <button mat-raised-button color="primary" type="submit" [disabled]="usuarioForm.invalid || estaEnviando"> Crear Usuario
+        <mat-card-actions class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="usuarioForm.invalid || estaEnviando">
+            Crear Usuario
           </button>
         </mat-card-actions>
 
