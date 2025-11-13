@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener,ViewChild  } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../material/material-module';
 import { PacienteService, Paciente } from '../paciente.service';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-paciente-observar-detail',
@@ -20,6 +21,8 @@ export class PacienteObservarDetailComponent implements OnInit {
   pacienteId: string | null = null;
   seccionActiva: string = 'datos-personales';
   objectKeys = Object.keys; // Para usar Object.keys en el template
+
+   window: any = window; // Declaramos window para acceder en el template
 
   constructor(
     private route: ActivatedRoute,
@@ -63,5 +66,25 @@ export class PacienteObservarDetailComponent implements OnInit {
       link.download = `qr-paciente-${this.pacienteId}.png`;
       link.click();
     }
+  }
+
+  isMobile: boolean = window.innerWidth < 1024;
+  @HostListener('window:resize')
+onResize() {
+  this.isMobile = window.innerWidth < 1024;
+}
+
+  @ViewChild('sidenav') sidenav!: MatSidenav;
+
+  abrirSidenav() {
+    this.sidenav.open();
+  }
+
+  cerrarSidenav() {
+    this.sidenav.close();
+  }
+
+  toggleSidenav() {
+    this.sidenav.toggle();
   }
 }

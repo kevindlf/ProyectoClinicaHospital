@@ -1,7 +1,4 @@
-// src/app/pacientes/paciente-detail/paciente-detail.ts
-
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-// Importamos RouterLink y RouterOutlet
 import { ActivatedRoute, Router, RouterOutlet, RouterLink } from '@angular/router'; // <<< Ya están aquí
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../material/material-module';

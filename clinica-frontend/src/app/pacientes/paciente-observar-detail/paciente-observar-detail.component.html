@@ -1,10 +1,10 @@
-<div class="observar-detail-container">
-            <button mat-stroked-button (click)="volver()" style="margin-bottom: 10px;">
-              <mat-icon>arrow_back</mat-icon> Volver a la Lista de Pacientes
-            </button>
+<div class="detail-container">
+  <button mat-stroked-button class="back-button" (click)="volver()">
+    <mat-icon>arrow_back</mat-icon> Volver a la Lista de Pacientes
+  </button>
   @if (errorCarga) {
-    <div style="padding: 0 20px;">
-      <mat-card class="mat-error-card" style="background-color: #fdecea; color: #a04446; padding: 15px;">
+    <div class="error-card">
+      <mat-card class="mat-error-card">
         <mat-card-content>{{ errorCarga }}</mat-card-content>
       </mat-card>
     </div>
@@ -12,8 +12,25 @@
      @if (paciente) {
       <mat-sidenav-container class="sidenav-container">
 
-        <mat-sidenav mode="side" opened class="sidenav-panel" style="width: 240px; border-right: 1px solid rgba(0,0,0,.12); background: #f5f5f5;">
-          <h3 style="padding: 15px 16px; margin: 0; border-bottom: 1px solid rgba(0,0,0,.1);">Secciones Paciente</h3>
+        <!-- 🔹 Sidenav lateral -->
+        <mat-sidenav
+          #sidenav
+          class="sidenav-panel"
+          [mode]="window.innerWidth > 900 ? 'side' : 'over'"
+          [opened]="window.innerWidth > 900"
+        >
+          <div class="sidenav-header">
+            <h3>Secciones del Paciente</h3>
+            <button
+              mat-icon-button
+              class="toggle-btn"
+              (click)="cerrarSidenav()"
+              aria-label="Cerrar menú"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          
           <mat-nav-list>
              <a mat-list-item [class.active-link]="seccionActiva === 'datos-personales'" (click)="cambiarSeccion('datos-personales')">
               <mat-icon matListItemIcon>person_outline</mat-icon>
@@ -46,15 +63,38 @@
             </mat-nav-list>
         </mat-sidenav>
 
-        <mat-sidenav-content class="content-panel" style="background-color: white;">
-          <div style="padding: 20px 20px 0 20px;">
-           
-             <h2 style="margin: 0;">{{ paciente.nombre }} {{ paciente.apellido }}</h2>
-             <p style="color: grey; margin-top: 5px;">ID: {{ paciente.id }} | Documento: {{ paciente.documento }}</p>
-             <mat-divider style="margin-top: 15px;"></mat-divider>
+        <!-- 🔹 Contenido principal -->
+        <mat-sidenav-content class="content-panel">
+
+          <!-- Header visible solo en móvil -->
+          <div class="sidenav-mobile-header" *ngIf="window.innerWidth <= 900">
+            <button
+              mat-icon-button
+              (click)="abrirSidenav()"
+              aria-label="Abrir menú"
+            >
+              <mat-icon>menu</mat-icon>
+            </button>
+            <h3>Secciones del Paciente</h3>
           </div>
 
-          <div style="padding: 20px;">
+          <!-- Botón para abrir sidenav en desktop cuando está cerrado -->
+          <div class="sidenav-desktop-toggle" *ngIf="window.innerWidth > 900 && !sidenav.opened">
+            <button
+              mat-icon-button
+              (click)="abrirSidenav()"
+              aria-label="Abrir menú"
+            >
+              <mat-icon>menu</mat-icon>
+            </button>
+          </div>
+
+          <div class="patient-header">
+            <h2>{{ paciente.nombre }} {{ paciente.apellido }}</h2>
+            <p>ID: {{ paciente.id }} | Documento: {{ paciente.documento }}</p>
+          </div>
+
+          <div class="patient-content">
             <!-- Mostrar contenido basado en la sección activa -->
             @if (seccionActiva === 'datos-personales') {
               <div class="seccion-content">
@@ -75,7 +115,7 @@
                 </div>
               </div>
             } @else if (seccionActiva === 'alergias') {
-              <div class="seccion-content">
+              <div class="seccion-content seccion-alergias">
                 <h3>Alergias y Transfusiones</h3>
                 <div class="datos-grid">
                   <div><strong>Alergias:</strong></div>
@@ -90,7 +130,7 @@
                 </div>
               </div>
             } @else if (seccionActiva === 'antecedentes') {
-              <div class="seccion-content">
+              <div class="seccion-content seccion-antecedentes">
                 <h3>Antecedentes Personales</h3>
                 <div *ngIf="paciente.antecedentesPersonales && paciente.antecedentesPersonales.length > 0">
                   <ul>
@@ -102,7 +142,7 @@
                 </div>
               </div>
             } @else if (seccionActiva === 'medicacion') {
-              <div class="seccion-content">
+              <div class="seccion-content seccion-medicacion">
                 <h3>Medicación Actual</h3>
                 <div *ngIf="paciente.medicacionActual && paciente.medicacionActual.length > 0">
                   <ul>
@@ -117,10 +157,12 @@
               <div class="seccion-content">
                 <h3>Historia Clínica</h3>
                 <div *ngIf="paciente.historiaClinica && paciente.historiaClinica.length > 0">
-                  <div *ngFor="let historia of paciente.historiaClinica" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-                    <div class="datos-grid">
+                  <div *ngFor="let historia of paciente.historiaClinica" style="margin-bottom: 40px; border-bottom: 1px solid #eee; padding-bottom: 20px;">
+                    <div class="historia-header">
                       <div><strong>Fecha:</strong> {{ historia.fecha }}</div>
                       <div *ngIf="historia.profesional"><strong>Profesional:</strong> {{ historia.profesional }}</div>
+                    </div>
+                    <div class="datos-grid">
                       <div *ngIf="historia.grupoSanguineo"><strong>Grupo Sanguíneo:</strong> {{ historia.grupoSanguineo }}</div>
                       <div *ngIf="historia.peso"><strong>Peso:</strong> {{ historia.peso }} kg</div>
                       <div *ngIf="historia.pesoSeco"><strong>Peso Seco:</strong> {{ historia.pesoSeco }} kg</div>
@@ -157,7 +199,7 @@
               <div class="seccion-content">
                 <h3>Evolución Mensual</h3>
                 <div *ngIf="paciente.evolucionMensual && paciente.evolucionMensual.length > 0">
-                  <div *ngFor="let evolucion of paciente.evolucionMensual" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                  <div *ngFor="let evolucion of paciente.evolucionMensual" style="margin-bottom: 40px; border-bottom: 1px solid #eee; padding-bottom: 20px;">
                     <strong>{{ evolucion.fecha | date:'dd/MM/yyyy' }}:</strong>
                     <div style="margin-left: 20px;">
                       <p><strong>Profesional:</strong> {{ evolucion.profesional }}</p>
@@ -176,9 +218,9 @@
 
       </mat-sidenav-container>
      } @else {
-        <p style="padding: 20px;">No se encontraron datos para este paciente.</p>
+        <div class="no-data">No se encontraron datos para este paciente.</div>
      }
   } @else {
-    <div style="text-align: center; padding: 40px;"> <p>Cargando datos del paciente...</p> </div>
+    <div class="loading">Cargando datos del paciente...</div>
   }
 </div>
