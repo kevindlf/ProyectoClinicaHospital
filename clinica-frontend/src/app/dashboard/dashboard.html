@@ -32,6 +32,19 @@
           <span>Observar Paciente</span>
         </button>
 
+        <!-- Opciones solo para admins -->
+        <ng-container *ngIf="esAdmin()">
+          <button mat-raised-button color="primary" class="action-button admin-button" (click)="irACrearUsuario()">
+            <mat-icon>person_add</mat-icon>
+            <span>Crear Usuario</span>
+          </button>
+
+          <button mat-raised-button color="accent" class="action-button admin-button" (click)="irAGestionarUsuarios()">
+            <mat-icon>admin_panel_settings</mat-icon>
+            <span>Administración de Usuarios</span>
+          </button>
+        </ng-container>
+
       </mat-card-content>
     </mat-card>
 

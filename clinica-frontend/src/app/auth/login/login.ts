@@ -94,7 +94,7 @@ export class Login implements OnInit {
         console.log(`>>> Redirigiendo según rol: ${rol}`);
         switch (rol) {
           case 'ADMIN':
-            this.router.navigate(['/admin/usuarios']);
+            this.router.navigate(['/dashboard']);
             break;
           case 'MEDICO':
             this.router.navigate(['/dashboard']);

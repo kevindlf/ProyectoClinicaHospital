@@ -1,0 +1,104 @@
+<!-- =========================================================
+     👥 GESTIÓN DE USUARIOS - LISTA ADMINISTRATIVA
+     Tabla con búsqueda y acciones CRUD para usuarios
+     ========================================================= -->
+<div class="admin-list-container">
+
+  <!-- Header -->
+  <div class="header-section">
+    <h1 class="page-title">Administración de Usuarios</h1>
+    <button mat-stroked-button class="back-button" (click)="volverAlDashboard()">
+      <mat-icon>arrow_back</mat-icon>
+      Volver al Dashboard
+    </button>
+  </div>
+
+  <!-- Barra de búsqueda -->
+  <mat-card class="search-card">
+    <mat-card-content>
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Buscar usuarios...</mat-label>
+        <input matInput [(ngModel)]="filtroBusqueda" (input)="filtrarUsuarios()" placeholder="Nombre, email o rol">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tabla de usuarios -->
+  <mat-card class="table-card">
+    <mat-card-header>
+      <mat-card-title>Usuarios del Sistema</mat-card-title>
+      <mat-card-subtitle>{{ usuariosFiltrados.length }} usuario(s) encontrado(s)</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="usuariosFiltrados" class="usuarios-table">
+
+          <!-- Columna ID -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let usuario">{{ usuario.idUsuario }}</td>
+          </ng-container>
+
+          <!-- Columna Nombre -->
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let usuario">{{ usuario.nombre }} {{ usuario.apellido }}</td>
+          </ng-container>
+
+          <!-- Columna Email -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let usuario">{{ usuario.email }}</td>
+          </ng-container>
+
+          <!-- Columna Rol -->
+          <ng-container matColumnDef="rol">
+            <th mat-header-cell *matHeaderCellDef>Rol</th>
+            <td mat-cell *matCellDef="let usuario">
+              <span class="rol-badge" [ngClass]="getRolClass(usuario.rol)">
+                {{ usuario.rol }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Columna Acciones -->
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let usuario">
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Acciones">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="verUsuario(usuario)">
+                  <mat-icon>visibility</mat-icon>
+                  <span>Ver Detalles</span>
+                </button>
+                <button mat-menu-item (click)="cambiarPassword(usuario)">
+                  <mat-icon>lock_reset</mat-icon>
+                  <span>Cambiar Contraseña</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="eliminarUsuario(usuario)" class="delete-option">
+                  <mat-icon>delete</mat-icon>
+                  <span>Eliminar</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columnasMostradas"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnasMostradas;"></tr>
+        </table>
+
+        <!-- Mensaje cuando no hay usuarios -->
+        <div *ngIf="usuariosFiltrados.length === 0" class="no-data">
+          <mat-icon>people_outline</mat-icon>
+          <p>No se encontraron usuarios</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+</div>

@@ -35,4 +35,23 @@ public class UsuarioController {
     public Usuario crearUsuario(@RequestBody Usuario usuario) {
         return usuarioService.guardar(usuario);
     }
+
+    // Actualizar usuario existente
+    @PutMapping("/{id}")
+    public Usuario actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
+        usuario.setIdUsuario(id);
+        return usuarioService.guardar(usuario);
+    }
+
+    // Eliminar usuario
+    @DeleteMapping("/{id}")
+    public void eliminarUsuario(@PathVariable Long id) {
+        usuarioService.eliminarUsuario(id);
+    }
+
+    // Cambiar contraseña
+    @PutMapping("/{id}/password")
+    public Usuario cambiarPassword(@PathVariable Long id, @RequestBody String nuevaPassword) {
+        return usuarioService.cambiarPassword(id, nuevaPassword);
+    }
 }

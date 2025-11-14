@@ -1,7 +1,8 @@
 // src/app/app.routes.ts
 import { Routes } from '@angular/router';
 import { Dashboard } from './dashboard/dashboard';
-import { GestionUsuariosComponent } from './admin/gestion-usuarios/gestion-usuarios';
+import { GestionUsuariosComponent } from './admin/crear-usuarios/crear-usuarios';
+import { AdminListComponent } from './admin/admin-list/admin-list';
 
 export const routes: Routes = [
   {
@@ -14,8 +15,13 @@ export const routes: Routes = [
     // Próximamente: canActivate: [authGuard]
   },
   {
-    path: 'admin/usuarios',
+    path: 'admin/crear-usuario',
     component: GestionUsuariosComponent,
+    // Próximamente: canActivate: [authGuard, adminGuard]
+  },
+  {
+    path: 'admin/gestionar-usuarios',
+    component: AdminListComponent, // Usar el nuevo componente para listar usuarios
     // Próximamente: canActivate: [authGuard, adminGuard]
   },
   // --- NUEVA RUTA PARA PACIENTES ---

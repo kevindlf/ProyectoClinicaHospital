@@ -16,6 +16,16 @@ export interface NuevoUsuario {
   idUsuario?: number;
 }
 
+export interface Usuario {
+  idUsuario: number;
+  nombre: string;
+  apellido: string;
+  email: string;
+  rol: string;
+  fechaCreacion?: string;
+  activo?: boolean;
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +48,26 @@ export class UsuarioService {
     // 6. Realiza la petición POST
     // El AuthInterceptor añadirá el token JWT automáticamente
     return this.http.post<NuevoUsuario>(this.apiUrl, usuarioData);
+  }
+
+  // Listar todos los usuarios
+  obtenerTodosLosUsuarios(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(this.apiUrl);
+  }
+
+  // Actualizar usuario
+  actualizarUsuario(id: number, usuario: Usuario): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.apiUrl}/${id}`, usuario);
+  }
+
+  // Eliminar usuario
+  eliminarUsuario(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  // Cambiar contraseña
+  cambiarPassword(id: number, nuevaPassword: string): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.apiUrl}/${id}/password`, nuevaPassword);
   }
 
   // Aquí podrías añadir otros métodos (listarUsuarios, buscarPorEmail, etc.) si los necesitas

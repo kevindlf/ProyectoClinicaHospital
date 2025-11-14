@@ -6,8 +6,9 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../material/material-module';
 // 1. Asegúrate que la ruta al servicio sea correcta y la interfaz
 import { UsuarioService, NuevoUsuario } from '../usuario';
+import { Router } from '@angular/router';
 
-const rolesPermitidos = ['MEDICO', 'ENFERMERO', 'TECNICO'];
+const rolesPermitidos = ['ADMIN', 'MEDICO', 'ENFERMERO', 'TECNICO'];
 
 @Component({
   selector: 'app-gestion-usuarios',
@@ -17,8 +18,8 @@ const rolesPermitidos = ['MEDICO', 'ENFERMERO', 'TECNICO'];
     ReactiveFormsModule,
     MaterialModule
   ],
-  templateUrl: './gestion-usuarios.html',
-  styleUrls: ['./gestion-usuarios.css'] // Corregido a styleUrls
+  templateUrl: './crear-usuarios.html',
+  styleUrls: ['./crear-usuarios.css'] // Corregido a styleUrls
 })
 // 2. Corregido el nombre de la clase a GestionUsuariosComponent
 export class GestionUsuariosComponent implements OnInit {
@@ -32,7 +33,8 @@ export class GestionUsuariosComponent implements OnInit {
   // 3. Inyecta UsuarioService
   constructor(
     private fb: FormBuilder,
-    private usuarioService: UsuarioService // Inyección
+    private usuarioService: UsuarioService, // Inyección
+    private router: Router
    ) { }
 
   ngOnInit(): void {
@@ -93,5 +95,9 @@ export class GestionUsuariosComponent implements OnInit {
       }
     });
     // Se elimina el código simulado que estaba después
+  }
+
+  volverAlDashboard(): void {
+    this.router.navigate(['/dashboard']);
   }
 }

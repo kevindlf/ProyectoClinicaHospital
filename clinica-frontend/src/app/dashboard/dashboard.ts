@@ -37,9 +37,9 @@ export class Dashboard implements OnInit {
     // Construir mensaje de bienvenida
     if (this.rolUsuario && this.nombreUsuario) {
       const rolCapitalizado = this.rolUsuario.charAt(0).toUpperCase() + this.rolUsuario.slice(1).toLowerCase();
-      this.mensajeBienvenida = `Bienvenido ${rolCapitalizado} ${this.nombreUsuario} a la Clínica Nefrológica`;
+      this.mensajeBienvenida = `${rolCapitalizado} ${this.nombreUsuario}`;
     } else {
-      this.mensajeBienvenida = 'Bienvenido a la Clínica Nefrológica';
+      this.mensajeBienvenida = 'Usuario';
     }
 
     console.log(`Dashboard cargado para rol: ${this.rolUsuario}`);
@@ -48,6 +48,11 @@ export class Dashboard implements OnInit {
   // Método para verificar si el usuario puede crear/modificar pacientes
   puedeGestionarPacientes(): boolean {
     return this.rolUsuario === 'MEDICO' || this.rolUsuario === 'ADMIN';
+  }
+
+  // Método para verificar si el usuario es ADMIN
+  esAdmin(): boolean {
+    return this.rolUsuario === 'ADMIN';
   }
 
   // Quitamos el método cargarPacientes()
@@ -64,7 +69,16 @@ export class Dashboard implements OnInit {
   irAObservarPaciente(): void {
     this.router.navigate(['/pacientes/observar']);
   }
-  // --- FIN NUEVOS MÉTODOS ---
+
+  // --- MÉTODOS PARA GESTIÓN DE USUARIOS (SOLO ADMIN) ---
+  irACrearUsuario(): void {
+    this.router.navigate(['/admin/crear-usuario']);
+  }
+
+  irAGestionarUsuarios(): void {
+    this.router.navigate(['/admin/gestionar-usuarios']);
+  }
+  // --- FIN MÉTODOS GESTIÓN USUARIOS ---
 
 
   logout(): void {

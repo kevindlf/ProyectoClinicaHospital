@@ -21,6 +21,11 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 // --- FIN NUEVAS IMPORTACIONES ---
 
+// --- NUEVAS IMPORTACIONES PARA TABLAS Y MENÚS ---
+import { MatTableModule } from '@angular/material/table';
+import { MatMenuModule } from '@angular/material/menu';
+// --- FIN NUEVAS IMPORTACIONES ---
+
 
 @NgModule({
   declarations: [],
@@ -42,7 +47,11 @@ import { MatListModule } from '@angular/material/list';
     MatDividerModule,
     // --- NUEVOS EXPORTS PARA SIDENAV ---
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    // --- FIN NUEVOS EXPORTS ---
+    // --- NUEVOS EXPORTS PARA TABLAS Y MENÚS ---
+    MatTableModule,
+    MatMenuModule
     // --- FIN NUEVOS EXPORTS ---
   ]
 })

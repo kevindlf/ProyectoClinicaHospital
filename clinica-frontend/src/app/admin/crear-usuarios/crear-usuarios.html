@@ -2,7 +2,7 @@
   <mat-card class="form-card">
     <mat-card-header class="form-header">
       <mat-card-title>Crear Nuevo Usuario</mat-card-title>
-      <mat-card-subtitle>Ingrese los datos del médico o enfermero/técnico</mat-card-subtitle>
+      <mat-card-subtitle>Ingrese los datos del nuevo usuario (médico, enfermero, técnico o administrador)</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
@@ -74,6 +74,10 @@
         }
 
         <mat-card-actions class="form-actions">
+           <button mat-stroked-button type="button" (click)="volverAlDashboard()">
+            <mat-icon>arrow_back</mat-icon>
+            Volver al Dashboard
+          </button>
           <button mat-raised-button color="primary" type="submit" [disabled]="usuarioForm.invalid || estaEnviando">
             Crear Usuario
           </button>
