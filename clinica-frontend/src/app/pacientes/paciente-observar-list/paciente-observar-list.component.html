@@ -1,5 +1,5 @@
 <div class="paciente-observar-list-container" style="padding: 20px;">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+  <div class="header-section" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
     <h2>Observar Pacientes</h2>
     <button mat-raised-button color="primary" (click)="volverAlDashboard()">
       <mat-icon>arrow_back</mat-icon> Volver al Dashboard
@@ -7,19 +7,19 @@
   </div>
 
   <!-- Buscador -->
-  <mat-form-field appearance="outline" style="width: 100%; margin-bottom: 20px;">
+  <mat-form-field appearance="outline" class="search-field" style="width: 100%; margin-bottom: 20px;">
     <mat-label>Buscar paciente (documento, nombre o apellido)</mat-label>
     <input matInput [formControl]="searchControl" placeholder="Ingrese término de búsqueda...">
     <mat-icon matSuffix>search</mat-icon>
   </mat-form-field>
 
   <!-- Mensaje de error -->
-  <div *ngIf="errorMessage" class="error-message" style="color: red; margin-bottom: 20px;">
+  <div *ngIf="errorMessage" class="error-message error-section" style="color: red; margin-bottom: 20px;">
     {{ errorMessage }}
   </div>
 
   <!-- Loading -->
-  <div *ngIf="isLoading" style="text-align: center; margin: 20px;">
+  <div *ngIf="isLoading" class="loading-section" style="text-align: center; margin: 20px;">
     <mat-spinner></mat-spinner>
     <p>Cargando pacientes...</p>
   </div>
@@ -68,12 +68,12 @@
   </div>
 
   <!-- Mensaje cuando no hay pacientes -->
-  <div *ngIf="!isLoading && pacientesFiltrados.length === 0 && pacientes.length === 0" style="text-align: center; margin: 40px;">
+  <div *ngIf="!isLoading && pacientesFiltrados.length === 0 && pacientes.length === 0" class="no-data-section" style="text-align: center; margin: 40px;">
     <p>No hay pacientes registrados en el sistema.</p>
   </div>
 
   <!-- Mensaje cuando no hay resultados de búsqueda -->
-  <div *ngIf="!isLoading && pacientesFiltrados.length === 0 && pacientes.length > 0" style="text-align: center; margin: 40px;">
+  <div *ngIf="!isLoading && pacientesFiltrados.length === 0 && pacientes.length > 0" class="no-results-section" style="text-align: center; margin: 40px;">
     <p>No se encontraron pacientes que coincidan con la búsqueda.</p>
   </div>
 </div>

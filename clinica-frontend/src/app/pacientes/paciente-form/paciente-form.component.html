@@ -7,7 +7,7 @@
   @switch (seccionActiva) {
 
     @case ('datos-personales') {
-      <div formGroupName="datosPersonales">
+      <div formGroupName="datosPersonales" class="seccion-content seccion-datos-personales">
         <h3>Datos Personales</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
           <mat-form-field appearance="outline"> <mat-label>Nombre</mat-label> <input matInput formControlName="nombre" required> @if(datosPersonalesForm.get('nombre')?.invalid && datosPersonalesForm.get('nombre')?.touched){ <mat-error>Nombre requerido</mat-error> } </mat-form-field>
@@ -52,7 +52,7 @@
     }
 
     @case ('alergias') {
-      <div formGroupName="alergiasTransfusiones">
+      <div formGroupName="alergiasTransfusiones" class="seccion-content seccion-alergias">
          <h3>Alergias y Transfusiones</h3>
          <h4>Alergias Conocidas</h4>
          <div formArrayName="alergias">
@@ -96,7 +96,7 @@
     }
 
     @case ('antecedentes') {
-        <div formGroupName="antecedentesPersonales">
+        <div formGroupName="antecedentesPersonales" class="seccion-content seccion-antecedentes">
             <h3>Antecedentes Personales</h3>
              <div formArrayName="items">
                 @for (antecedenteGroup of antecedentesItems.controls; track $index) {
@@ -123,7 +123,7 @@
     }
 
     @case ('medicacion') {
-      <div formGroupName="medicacionActual">
+      <div formGroupName="medicacionActual" class="seccion-content seccion-medicacion">
         <h3>Medicación Actual</h3>
         <div formArrayName="items">
           @for (medicacionGroup of medicacionItems.controls; track $index) {
@@ -155,7 +155,7 @@
     }
 
     @case ('historia') {
-      <div formGroupName="historiaClinica">
+      <div formGroupName="historiaClinica" class="seccion-content seccion-historia">
         <h3>Historia Clínica</h3>
         <div formArrayName="items">
           @for (historiaGroup of historiaItems.controls; track $index) {
@@ -238,7 +238,7 @@
     }
 
     @case ('dialisis') {
-      <div formGroupName="parametrosDialisis">
+      <div formGroupName="parametrosDialisis" class="seccion-content seccion-dialisis">
         <h3>Parámetros Diálisis</h3>
          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
              <div style="display: flex; flex-direction: column; align-items: center;">
@@ -299,7 +299,7 @@
     }
 
     @case ('evolucion') {
-      <div formGroupName="evolucionMensual">
+      <div formGroupName="evolucionMensual" class="seccion-content seccion-evolucion">
         <h3>Evolución Mensual</h3>
         <div formArrayName="items">
           @for (evolucionGroup of evolucionItems.controls; track $index) {
