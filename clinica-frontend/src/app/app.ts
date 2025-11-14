@@ -1,8 +1,9 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, Inject, PLATFORM_ID } from '@angular/core';
 // 1. Importa 'Event as RouterEvent' para el tipo genérico
 import { Router, RouterOutlet, Event as RouterEvent, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 // import { filter } from 'rxjs/operators'; // Ya no necesitamos filter
 import { AuthService } from './auth/auth'; // Importa AuthService
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -14,31 +15,34 @@ import { AuthService } from './auth/auth'; // Importa AuthService
 export class App implements OnInit {
   protected readonly title = signal('clinica-frontend');
 
-  constructor(private router: Router, private authService: AuthService) {} // Inyecta AuthService
+  constructor(private router: Router, private authService: AuthService, @Inject(PLATFORM_ID) private platformId: Object) {} // Inyecta AuthService
 
   ngOnInit(): void {
-    // Escuchar eventos de navegación para detectar acceso a rutas protegidas
-    this.router.events.subscribe((event: RouterEvent) => {
-      if (event instanceof NavigationStart) {
-        const targetUrl = event.url;
-        const isPatientAccess = targetUrl.startsWith('/pacientes/');
+    // Solo ejecutar lógica de localStorage si estamos en el navegador
+    if (isPlatformBrowser(this.platformId)) {
+      // Escuchar eventos de navegación para detectar acceso a rutas protegidas
+      this.router.events.subscribe((event: RouterEvent) => {
+        if (event instanceof NavigationStart) {
+          const targetUrl = event.url;
+          const isPatientAccess = targetUrl.startsWith('/pacientes/');
 
-        if (!this.authService.estaLogueado() && isPatientAccess) {
-          // Guardar la URL de retorno para después del login
-          localStorage.setItem('returnUrl', targetUrl);
-          console.log('Acceso a pacientes detectado, guardando URL de retorno:', targetUrl);
-          // Redirigir al login
-          this.router.navigate(['/auth/login']);
+          if (!this.authService.estaLogueado() && isPatientAccess) {
+            // Guardar la URL de retorno para después del login
+            localStorage.setItem('returnUrl', targetUrl);
+            console.log('Acceso a pacientes detectado, guardando URL de retorno:', targetUrl);
+            // Redirigir al login
+            this.router.navigate(['/auth/login']);
+          }
         }
-      }
-    });
+      });
 
-    // Verificar si ya estamos en una ruta que requiere login al iniciar
-    const currentUrl = this.router.url;
-    if (!this.authService.estaLogueado() && currentUrl.startsWith('/pacientes/')) {
-      localStorage.setItem('returnUrl', currentUrl);
-      console.log('Aplicación iniciada en ruta de pacientes, guardando URL de retorno:', currentUrl);
-      this.router.navigate(['/auth/login']);
+      // Verificar si ya estamos en una ruta que requiere login al iniciar
+      const currentUrl = this.router.url;
+      if (!this.authService.estaLogueado() && currentUrl.startsWith('/pacientes/')) {
+        localStorage.setItem('returnUrl', currentUrl);
+        console.log('Aplicación iniciada en ruta de pacientes, guardando URL de retorno:', currentUrl);
+        this.router.navigate(['/auth/login']);
+      }
     }
 
     // 2. Escucha TODOS los eventos sin filtrar
