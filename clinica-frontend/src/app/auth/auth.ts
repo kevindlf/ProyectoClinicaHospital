@@ -6,15 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs'; // Quitamos 'map' que ya no se usa aquí
 import { jwtDecode } from 'jwt-decode'; // <<< 1. Importa jwtDecode
 
-// INTERFAZ PARA LA RESPUESTA JSON (si decides cambiar el backend en el futuro)
-// interface AuthResponse {
-//   token: string;
-// }
-
-// Interfaz para el payload decodificado del JWT
-// ¡¡¡IMPORTANTE!!! Ajusta los nombres de los campos ('roles', 'sub', etc.)
-// para que coincidan EXACTAMENTE con los claims que tu backend
-// (JwtService.java) está poniendo en el token.
 interface DecodedToken {
   sub: string;      // Subject (usualmente el email)
   roles?: string[]; // Si envías roles como array (ej: ["ROLE_ADMIN"])

@@ -40,16 +40,6 @@ export class Login implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // --- INICIO CAMBIO ---
-    // Comenta o elimina este bloque para evitar la redirección automática
-    /*
-    if (this.authService.estaLogueado()) {
-        const rol = this.authService.obtenerRolUsuario();
-        console.log(`Usuario ya logueado con rol ${rol}, redirigiendo desde ngOnInit...`);
-        this.redirigirSegunRol(rol);
-    }
-    */
-    // --- FIN CAMBIO ---
 
     // El formulario se sigue creando normalmente
     this.loginForm = this.fb.group({
