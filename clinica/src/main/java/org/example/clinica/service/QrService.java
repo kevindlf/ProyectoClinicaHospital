@@ -18,6 +18,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Servicio encargado de generar códigos QR y enviarlos por correo electrónico.
+ * Funcionalidades principales:
+ * - Generación de QR en formato PNG usando ZXing.
+ * - Envío del QR por email a una lista de destinatarios.
+ * Este servicio es utilizado por PacienteService para automatizar el envío
+ * del QR de acceso al perfil del paciente.
+ */
 @Service
 public class QrService {
 
@@ -28,53 +36,76 @@ public class QrService {
     private JavaMailSender mailSender;
 
     /**
-     * Genera un Código QR como un array de bytes PNG.
-     * @param content El contenido a codificar (en nuestro caso, el ID del paciente).
-     * @param width Ancho de la imagen.
-     * @param height Alto de la imagen.
-     * @return El array de bytes de la imagen QR.
+     * Genera una imagen PNG de un código QR a partir de un texto.
+     * Proceso:
+     * - Se configura ZXing con compresión UTF-8 y nivel de corrección alto.
+     * - Se genera la matriz del QR.
+     * - Se convierte la matriz en bytes PNG.
+     *
+     * @param content Contenido a codificar en el QR (por ejemplo, la URL del paciente).
+     * @param width Ancho deseado del QR.
+     * @param height Alto deseado del QR.
+     * @return Array de bytes correspondiente a la imagen PNG generada.
      */
     public byte[] generateQrCodeImage(String content, int width, int height) {
         try {
-            // Configuración del QR
             Map<EncodeHintType, Object> hints = new HashMap<>();
             hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
             hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-            hints.put(EncodeHintType.MARGIN, 1); // Margen mínimo
+            hints.put(EncodeHintType.MARGIN, 1);
 
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
-            BitMatrix bitMatrix = qrCodeWriter.encode(content, BarcodeFormat.QR_CODE, width, height, hints);
+            BitMatrix bitMatrix = qrCodeWriter.encode(
+                    content,
+                    BarcodeFormat.QR_CODE,
+                    width,
+                    height,
+                    hints
+            );
 
-            // Escribir la matriz de bits a un stream de bytes (PNG)
             ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
             MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
 
             return pngOutputStream.toByteArray();
 
         } catch (Exception e) {
-            System.err.println("Error al generar el Código QR para el contenido: " + content + " - " + e.getMessage());
-            return new byte[0]; // Devuelve un array vacío en caso de error
+            System.err.println(
+                    "Error al generar el Código QR para el contenido: "
+                            + content + " - " + e.getMessage()
+            );
+            return new byte[0];
         }
     }
 
     /**
-     * Genera un Código QR con el tamaño por defecto.
-     * @param content El contenido a codificar.
-     * @return El array de bytes de la imagen QR.
+     * Genera una imagen PNG de un QR usando el tamaño por defecto (200x200).
+     *
+     * @param content Contenido a codificar.
+     * @return Imagen del QR en bytes.
      */
     public byte[] generateQrCodeImage(String content) {
         return generateQrCodeImage(content, WIDTH, HEIGHT);
     }
 
     /**
-     * Envía el QR por email a los emails prioritarios usando JavaMailSender.
-     * @param pacienteId ID del paciente
-     * @param emails Lista de emails destinatarios
-     * @param qrData Datos del QR (imagen en bytes)
+     * Envía un código QR por correo electrónico utilizando JavaMailSender.
+     * Proceso:
+     * - Crea un correo electrónico con asunto, cuerpo y adjunto.
+     * - Adjunta la imagen del QR previamente generada.
+     * - Envía el correo a los destinatarios especificados.
+     * Notas:
+     * - Este método es usado automáticamente cuando se crea o actualiza un paciente.
+     * - Solo se envía si la lista de emails contiene al menos un destinatario.
+     *
+     * @param pacienteId ID del paciente asociado al QR.
+     * @param emails Lista de destinatarios.
+     * @param qrData Imagen del QR en bytes.
      */
     public void enviarQrPorEmail(String pacienteId, List<String> emails, byte[] qrData) {
         if (emails == null || emails.isEmpty()) {
-            System.out.println("No hay emails configurados para enviar el QR del paciente: " + pacienteId);
+            System.out.println(
+                    "No hay emails configurados para enviar el QR del paciente: " + pacienteId
+            );
             return;
         }
 
@@ -84,16 +115,22 @@ public class QrService {
 
             helper.setTo(emails.toArray(new String[0]));
             helper.setSubject("Código QR de Paciente - Clínica Nefrológica");
-            helper.setText("Adjunto el código QR para acceder a la información del paciente.\n\n" +
-                          "Para probar el QR:\n" +
-                          "1. Escanea el código QR adjunto con tu teléfono\n" +
-                          "2. O ingresa manualmente en tu navegador: http://localhost:4200/pacientes/" + pacienteId + "/observar/datos-personales\n\n" +
-                          "Nota: El QR contiene la URL completa para acceder directamente al paciente.\n" +
-                          "Si estás en móvil, necesitarás iniciar sesión primero en la aplicación.\n\n" +
-                          "Atentamente,\nClínica Nefrológica");
+            helper.setText(
+                    "Adjunto el código QR para acceder a la información del paciente.\n\n" +
+                            "Para probar el QR:\n" +
+                            "1. Escanea el código QR adjunto con tu teléfono\n" +
+                            "2. O ingresa manualmente en tu navegador: http://localhost:4200/pacientes/"
+                            + pacienteId + "/observar/datos-personales\n\n" +
+                            "Nota: El QR contiene la URL completa para acceder directamente al paciente.\n" +
+                            "Si estás en móvil, necesitarás iniciar sesión primero en la aplicación.\n\n" +
+                            "Atentamente,\nClínica Nefrológica"
+            );
 
-            // Adjuntar la imagen QR
-            helper.addAttachment("qr_paciente_" + pacienteId + ".png", new ByteArrayResource(qrData));
+            // Se adjunta el archivo PNG generado
+            helper.addAttachment(
+                    "qr_paciente_" + pacienteId + ".png",
+                    new ByteArrayResource(qrData)
+            );
 
             mailSender.send(message);
 
@@ -104,7 +141,10 @@ public class QrService {
             System.out.println("============================");
 
         } catch (Exception e) {
-            System.err.println("Error al enviar QR por email para paciente " + pacienteId + ": " + e.getMessage());
+            System.err.println(
+                    "Error al enviar QR por email para paciente "
+                            + pacienteId + ": " + e.getMessage()
+            );
             e.printStackTrace();
         }
     }

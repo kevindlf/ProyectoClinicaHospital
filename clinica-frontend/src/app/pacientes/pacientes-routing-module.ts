@@ -97,6 +97,12 @@ const routes: Routes = [
   }
 ];
 
+/**
+ * Módulo de rutas para la gestión de pacientes.
+ * Define las rutas para crear, listar, editar, observar y detallar pacientes,
+ * incluyendo rutas hijas para secciones específicas como datos personales,
+ * alergias, antecedentes, medicación, historia clínica, parámetros de diálisis y evolución.
+ */
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]

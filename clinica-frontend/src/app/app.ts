@@ -5,6 +5,13 @@ import { Router, RouterOutlet, Event as RouterEvent, NavigationStart, Navigation
 import { AuthService } from './auth/auth'; // Importa AuthService
 import { isPlatformBrowser } from '@angular/common';
 
+/**
+ * Componente raíz de la aplicación de la clínica.
+ * Maneja la inicialización de la aplicación, configuración de rutas,
+ * autenticación y redirecciones basadas en roles de usuario.
+ * Incluye lógica para guardar URLs de retorno durante accesos directos
+ * (como QR codes) y redirigir después del login.
+ */
 @Component({
   selector: 'app-root',
   standalone: true,

@@ -9,6 +9,49 @@ import { Observable, Subscription, of } from 'rxjs'; // Importa Subscription y '
 import { HttpErrorResponse } from '@angular/common/http';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 
+/**
+ * Componente para crear y editar pacientes en el sistema.
+ * Maneja formularios complejos con múltiples secciones (datos personales,
+ * alergias, antecedentes, medicación, historia clínica, parámetros de diálisis,
+ * evolución mensual), validación de campos obligatorios, subida de archivos
+ * y envío de datos al backend. Incluye indicadores de carga, manejo de errores,
+ * navegación automática tras creación exitosa y modo de edición.
+ * Solo accesible para usuarios con rol MEDICO o ADMIN.
+ */
+/**
+ * Componente para crear y editar pacientes en el sistema.
+ * Maneja formularios complejos con múltiples secciones (datos personales,
+ * alergias, antecedentes, medicación, historia clínica, parámetros de diálisis,
+ * evolución mensual), validación de campos, subida de archivos y envío de datos
+ * al backend. Incluye indicadores de carga, manejo de errores y navegación
+ * automática tras operaciones exitosas. Solo accesible para usuarios con rol MEDICO o ADMIN.
+ */
+/**
+ * Componente para crear nuevos pacientes en el sistema.
+ * Maneja formularios complejos con múltiples secciones (datos personales,
+ * alergias, antecedentes, medicación, historia clínica, parámetros de diálisis,
+ * evolución mensual). Incluye validación, manejo de errores, indicadores de carga
+ * y navegación de vuelta al dashboard. Solo accesible para usuarios con rol MEDICO o ADMIN.
+ */
+/**
+ * Componente de formulario para crear y editar pacientes.
+ * Maneja formularios complejos con múltiples secciones (datos personales,
+ * alergias, antecedentes, medicación, historia clínica, parámetros de diálisis,
+ * evolución mensual). Soporta modo creación y edición, con navegación entre
+ * secciones y validación de formularios. Incluye manejo de arrays dinámicos
+ * y integración con servicios de autenticación y pacientes.
+ */
+/**
+ * Componente complejo para crear y editar pacientes con formularios dinámicos.
+ * Maneja múltiples secciones (datos personales, alergias/transfusiones,
+ * antecedentes personales, medicación actual, historia clínica,
+ * parámetros de diálisis, evolución mensual) con formularios reactivos,
+ * validación de campos, integración con servicios de pacientes y autenticación,
+ * navegación entre secciones, indicadores de carga, manejo de errores
+ * y compatibilidad con SSR. Incluye mapeo de datos entre frontend y backend,
+ * gestión de suscripciones y navegación automática tras operaciones exitosas.
+ * Accesible para usuarios con permisos de gestión de pacientes (MEDICO, ADMIN).
+ */
 @Component({
   selector: 'app-paciente-form',
   standalone: true,

@@ -27,6 +27,13 @@ export interface Usuario {
 }
 
 
+/**
+ * Servicio para gestionar operaciones CRUD de usuarios.
+ * Proporciona métodos para crear, leer, actualizar y eliminar usuarios,
+ * así como interfaces para definir la estructura de datos de usuarios,
+ * incluyendo roles (ADMIN, MEDICO, ENFERMERO, TECNICO).
+ * Maneja autenticación y autorización para operaciones administrativas.
+ */
 @Injectable({
   providedIn: 'root'
 })

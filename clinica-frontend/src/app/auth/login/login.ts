@@ -12,6 +12,48 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 
+/**
+ * Componente para autenticación de usuarios en el sistema.
+ * Maneja formularios de login con validación de campos obligatorios,
+ * autenticación contra el backend, manejo de tokens JWT y redirección
+ * automática tras login exitoso. Incluye indicadores de carga, manejo de errores
+ * y navegación a registro de nuevos usuarios. Accesible para todos los usuarios.
+ */
+/**
+ * Componente para autenticación de usuarios en el sistema.
+ * Maneja formularios de login con validación de campos obligatorios,
+ * integración con servicios de autenticación, manejo de errores y
+ * redirección automática al dashboard tras login exitoso.
+ * Incluye indicadores de carga y navegación a registro si es necesario.
+ */
+/**
+ * Componente de login para la aplicación de la clínica.
+ * Maneja el formulario de autenticación de usuarios, valida credenciales,
+ * guarda el token JWT y redirige al usuario según su rol (ADMIN, MEDICO, etc.).
+ * También maneja errores de login y redirecciones después de login exitoso.
+ */
+/**
+ * Componente de login para autenticar usuarios en la aplicación.
+ * Maneja formularios de login con validación, redirecciones basadas en roles,
+ * recuperación de URLs de retorno (para accesos directos como QR codes),
+ * y manejo de errores de autenticación. Compatible con SSR mediante PLATFORM_ID.
+ */
+/**
+ * Componente para autenticación de usuarios en el sistema.
+ * Maneja formularios de login con validación de campos obligatorios,
+ * integración con servicios de autenticación, manejo de sesiones y
+ * navegación automática tras login exitoso. Incluye indicadores de carga,
+ * manejo de errores y redirección basada en roles de usuario.
+ * Accesible para todos los usuarios no autenticados.
+ */
+/**
+ * Componente para autenticación de usuarios en el sistema.
+ * Maneja formularios de login con validación de campos obligatorios
+ * (email, contraseña), integración con servicios de autenticación,
+ * indicadores de carga, manejo de errores y navegación automática
+ * tras login exitoso. Incluye compatibilidad con SSR y navegación
+ * responsive. Accesible para todos los usuarios no autenticados.
+ */
 @Component({
   selector: 'app-login',
   standalone: true,

@@ -16,6 +16,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * Filtro que se ejecuta en cada petición para validar el token JWT.
+ * Si el token es válido, autentica al usuario dentro del contexto de Spring Security.
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -30,49 +34,51 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        // 1. Obtener el encabezado de autorización
+        // Obtiene el header Authorization
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
 
-        // Si el token no está presente o no tiene el formato "Bearer <token>", se ignora el filtro
+        // Si no viene un Bearer token, sigue la petición sin validar
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // 2. Extraer JWT (después de "Bearer ") y el email
+        // Extrae el token después de "Bearer "
         jwt = authHeader.substring(7);
+
+        // Obtiene el email del token
         userEmail = jwtService.extractUsername(jwt);
 
-        // 3. Validar y autenticar
-        // Si hay un email y el usuario no está ya autenticado en el contexto de Spring Security
+        // Si hay email y todavía no hay un usuario autenticado
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            // Cargar UserDetails (Usuario) usando el email
+            // Carga el usuario desde la base de datos
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-            // Si el token es válido
+            // Verifica si el token coincide con el usuario
             if (jwtService.isTokenValid(jwt, userDetails)) {
 
-                // Crea el objeto de autenticación
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
+                // Crea la autenticación con sus permisos
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
 
-                // Establece detalles de la solicitud (IP, sesión, etc.)
+                // Adjunta detalles de la solicitud
                 authToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
 
-                // Autentica al usuario en el contexto de seguridad
+                // Registra al usuario como autenticado
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
 
-        // 4. Continuar la cadena de filtros
+        // Continúa con el resto de filtros
         filterChain.doFilter(request, response);
     }
 }

@@ -18,6 +18,12 @@ interface DecodedToken {
 }
 
 
+/**
+ * Servicio de autenticación para gestionar login, logout y manejo de tokens JWT.
+ * Proporciona métodos para autenticar usuarios, almacenar y recuperar tokens,
+ * decodificar información del usuario (rol, nombre), verificar expiración de tokens,
+ * y redirigir según roles. Compatible con SSR mediante PLATFORM_ID.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -81,15 +87,7 @@ export class AuthService {
         const decodedToken: DecodedToken = jwtDecode(token);
         console.log("Token decodificado:", decodedToken); // Log para depuración
 
-        // --- LÓGICA PARA EXTRAER EL ROL ---
-        // AJUSTA ESTA PARTE SEGÚN CÓMO ENVÍES EL ROL EN EL TOKEN DESDE JAVA
-
-        // Opción A: Si envías el rol como un string en el claim 'role'
-        // if (decodedToken.role) {
-        //   return decodedToken.role.replace('ROLE_', ''); // Quita prefijo ROLE_ si existe
-        // }
-
-        // Opción B: Si envías roles/authorities como un array en el claim 'roles' (o 'authorities')
+        // Si envías roles/authorities como un array en el claim 'roles' (o 'authorities')
         // *** ESTA ES LA FORMA MÁS COMÚN CON SPRING SECURITY ***
         if (decodedToken.roles && decodedToken.roles.length > 0) {
            // Devuelve el primer rol encontrado, quitando el prefijo ROLE_

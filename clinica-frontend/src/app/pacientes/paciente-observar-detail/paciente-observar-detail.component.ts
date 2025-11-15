@@ -8,6 +8,16 @@ import { catchError } from 'rxjs/operators';
 import { MatSidenav } from '@angular/material/sidenav';
 import { isPlatformBrowser } from '@angular/common';
 
+
+/**
+ * Componente para observar detalles completos de un paciente en modo de solo lectura.
+ * Muestra información del paciente organizada por secciones (datos personales,
+ * alergias, antecedentes, medicación, historia clínica, parámetros de diálisis,
+ * evolución mensual), permite navegación entre secciones, descarga de QR codes
+ * y navegación responsive con sidenav. Incluye indicadores de carga,
+ * manejo de errores y compatibilidad con SSR. Accesible para usuarios
+ * con permisos de visualización de pacientes.
+ */
 @Component({
   selector: 'app-paciente-observar-detail',
   standalone: true,

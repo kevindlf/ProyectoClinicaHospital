@@ -8,6 +8,21 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+/**
+ * Componente para observar y listar pacientes en modo de solo lectura.
+ * Muestra una tabla con pacientes filtrables por búsqueda en tiempo real,
+ * permite visualizar detalles de pacientes sin posibilidad de edición.
+ * Incluye indicadores de carga, manejo de errores y navegación de vuelta al dashboard.
+ * Accesible para todos los usuarios autenticados.
+ */
+/**
+ * Componente para listar pacientes en modo de observación.
+ * Muestra una tabla con pacientes filtrables por búsqueda en tiempo real
+ * (documento, nombre, apellido), permite observar detalles de pacientes
+ * sin permisos de edición y navegar de vuelta al dashboard.
+ * Incluye indicadores de carga, manejo de errores y navegación responsive.
+ * Accesible para usuarios con permisos de visualización de pacientes.
+ */
 @Component({
   selector: 'app-paciente-observar-list',
   standalone: true,

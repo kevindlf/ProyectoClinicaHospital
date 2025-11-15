@@ -51,6 +51,14 @@ export interface Historial {
 export interface Evolucion { fecha: string; profesional: string; informeGeneral: string; }
 // --- FIN INTERFACES ---
 
+/**
+ * Servicio para gestionar operaciones CRUD de pacientes.
+ * Proporciona métodos para crear, leer, actualizar y eliminar pacientes,
+ * así como interfaces para definir la estructura de datos de pacientes,
+ * incluyendo datos personales, alergias, antecedentes, medicación,
+ * historia clínica, parámetros de diálisis y evolución mensual.
+ * Maneja autenticación y autorización para operaciones médicas.
+ */
 @Injectable({
   providedIn: 'root'
 })

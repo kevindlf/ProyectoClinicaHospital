@@ -8,6 +8,36 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card'; // Importamos MatCardModule
 import { MatIconModule } from '@angular/material/icon'; // Importamos MatIconModule
 
+/**
+ * Componente principal del dashboard de la aplicación.
+ * Muestra estadísticas generales del sistema, navegación rápida a módulos
+ * principales (pacientes, usuarios, administración), indicadores de estado
+ * y accesos directos basados en el rol del usuario. Incluye manejo de errores,
+ * indicadores de carga y navegación responsive. Accesible para todos los usuarios autenticados.
+ */
+/**
+ * Componente principal del dashboard de la aplicación.
+ * Muestra estadísticas generales del sistema (número de pacientes,
+ * usuarios activos, etc.), navegación rápida a módulos principales
+ * (pacientes, usuarios, administración), y widgets informativos.
+ * Incluye indicadores de carga, manejo de errores y controles de acceso
+ * basados en roles de usuario. Compatible con SSR.
+ */
+/**
+ * Componente principal del dashboard de la aplicación de la clínica.
+ * Muestra un mensaje de bienvenida personalizado según el rol del usuario,
+ * y proporciona botones de navegación para gestionar pacientes y usuarios
+ * basados en permisos (ADMIN puede gestionar usuarios, MEDICO/ENFERMERO/TECNICO
+ * pueden gestionar pacientes). Incluye funcionalidad de logout.
+ */
+/**
+ * Componente principal del dashboard de la aplicación.
+ * Muestra estadísticas generales del sistema, navegación rápida a módulos
+ * principales (pacientes, usuarios, administración), indicadores de carga,
+ * manejo de errores y funcionalidades específicas por rol de usuario.
+ * Incluye gráficos, listas recientes y acceso directo a acciones comunes.
+ * Accesible para usuarios autenticados según sus permisos.
+ */
 @Component({
   selector: 'app-dashboard',
   standalone: true,

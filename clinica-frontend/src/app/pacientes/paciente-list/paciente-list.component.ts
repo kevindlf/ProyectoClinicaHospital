@@ -8,6 +8,14 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+/**
+ * Componente para listar y gestionar pacientes existentes.
+ * Muestra una tabla con pacientes filtrables por búsqueda en tiempo real
+ * (documento, nombre, apellido), permite editar pacientes existentes,
+ * eliminar pacientes con confirmación y navegar de vuelta al dashboard.
+ * Incluye indicadores de carga, manejo de errores y navegación responsive.
+ * Accesible para usuarios con permisos de gestión de pacientes.
+ */
 @Component({
   selector: 'app-paciente-list',
   standalone: true,

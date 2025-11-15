@@ -10,6 +10,21 @@ import { Router } from '@angular/router';
 
 const rolesPermitidos = ['ADMIN', 'MEDICO', 'ENFERMERO', 'TECNICO'];
 
+/**
+ * Componente para crear nuevos usuarios en el sistema.
+ * Maneja formularios de registro con validación de campos obligatorios,
+ * selección de roles (ADMIN, MEDICO, ENFERMERO, TECNICO), integración con
+ * servicios de autenticación y envío de datos al backend. Incluye indicadores
+ * de carga, manejo de errores y navegación automática tras creación exitosa.
+ * Solo accesible para usuarios con rol ADMIN.
+ */
+/**
+ * Componente para crear nuevos usuarios en el sistema.
+ * Permite a administradores registrar usuarios con roles específicos (ADMIN, MEDICO, ENFERMERO, TECNICO),
+ * validando formularios y manejando errores de creación. Incluye mensajes de éxito y error,
+ * y navegación de vuelta al dashboard.
+ */
+
 @Component({
   selector: 'app-gestion-usuarios',
   standalone: true,

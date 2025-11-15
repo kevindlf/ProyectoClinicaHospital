@@ -7,6 +7,14 @@ import { UsuarioService, Usuario } from '../usuario';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
+/**
+ * Componente para listar y gestionar usuarios existentes.
+ * Muestra una tabla con usuarios filtrables por búsqueda en tiempo real
+ * (email, nombre, apellido, rol), permite editar usuarios existentes,
+ * eliminar usuarios con confirmación y navegar de vuelta al dashboard.
+ * Incluye indicadores de carga, manejo de errores y navegación responsive.
+ * Accesible para usuarios con permisos de gestión de usuarios (ADMIN).
+ */
 @Component({
   selector: 'app-admin-list',
   standalone: true,
